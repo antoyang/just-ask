@@ -175,10 +175,6 @@ def get_args():
         "--question_example", type=str, default="", help="demo question text"
     )
     parser.add_argument("--video_example", type=str, default="", help="demo video path")
-    parser.add_argument("--port", type=int, default=8899, help="demo port")
-    parser.add_argument(
-        "--pretrain_path2", type=str, default="", help="second demo model"
-    )
 
     args = parser.parse_args()
 
