@@ -103,39 +103,46 @@ DistilBERT tokenizer and model checkpoints will be automatically downloaded from
 **Training VQA-T on HowToVQA69M**:
 To train on HowToVQA69M as proposed in our paper (it takes less than 48H on 8 NVIDIA Tesla V100), run:
 ```
-python main_sqa.py --dataset="sqa" --num_thread_reader=16 --epochs=10 --checkpoint_dir="ptsqa" --qmax_words=20 --amax_words=10 --max_feats=20 --batch_size=128 --batch_size_val=256 --n_pair=32 --freq_display=10 --lr=0.00005 --mlm_prob=0.15
+python main_sqa.py --dataset="sqa" --epochs=10 --checkpoint_dir="ptsqa" \
+--batch_size=128 --batch_size_val=256 --n_pair=32 --freq_display=10
 ```
 
 **Training QA-T on HowToVQA69M**: The pretraining is done with the previous command complemented with `--baseline qa`.
 
 **Training VQA-T on HowTo100M**: To train the multi-modal transformer on HowTo100M with masked language modeling and cross-modal matching objectives (it takes less than 2 days on 8 NVIDIA Tesla V100), run:
 ```
-python main_mlmcm.py --dataset="howto100m" --num_thread_reader=16 --epochs=10 --min_words=10 --qmax_words=20 --min_time=10 --max_feats=20 --checkpoint_dir="pthtm" --batch_size=128 --batch_size_val=3500 --n_pair=32 --freq_display=10 --lr=0.00005 --lr_decay=0.9 --n_negs=1
+python main_mlmcm.py --dataset="howto100m" --epochs=10 --checkpoint_dir="pthtm" \ 
+--batch_size=128 --batch_size_val=3500 --n_pair=32 --freq_display=10
 ```
 Note that zero-shot validation on YouCook2 and MSR-VTT video retrieval are performed at every epoch. We followed https://github.com/antoine77340/MIL-NCE_HowTo100M for the preprocessing of these datasets.
 
 ## VideoQA Finetuning and Zero-Shot VideoQA
 **Finetuning**: To finetune on a downstream VideoQA dataset (for MSRVTT-QA, which is the largest downstream dataset, it takes less than 4 hours on 4 NVIDIA Tesla V100), run:
 ```
-python main_videoqa.py --num_thread_reader=16 --checkpoint_dir=<dataset> --mlm_prob=0.15 --dataset=<dataset> --lr=$lr --pretrain_path=<DEFAULT_CKPT_PREDIR>/ptsqa/e9.pth --batch_size_val=2048 --batch_size=256
+python main_videoqa.py --checkpoint_dir=<dataset> --dataset=<dataset> --lr=0.00001 \ 
+--pretrain_path=<DEFAULT_CKPT_PREDIR>/ptsqa/e9.pth
 ```
 
 **Training from scratch**: VQA-T trained from scratch is simply obtained by running the previous script with no `pretrain_path` set.
 
 **Zero-shot**: For our model, Zero-shot VideoQA can simply be performed by adding `--test 1`. In the case of QA-T, also add `--baseline qa`. In the case of VQA-T pretrained on HowTo100M, run:
 ```
-python eval_videoqa_cm.py --num_thread_reader=16 --checkpoint_dir=<dataset> --dataset=<dataset> --pretrain_path=<DEFAULT_CKPT_PREDIR>/pthtm/e9.pth
+python eval_videoqa_cm.py --checkpoint_dir=<dataset> --dataset=<dataset> \ 
+--pretrain_path=<DEFAULT_CKPT_PREDIR>/pthtm/e9.pth
 ```
 
 ## Evaluation per question type, answer quartile, and VideoQA Demo
 **Detailed evaluation**: Using a trained checkpoint, to perform evaluation segmented per question type and answer quartile, use:
 ```
-python eval_videoqa.py --dataset <dataset> --pretrain_path <DEFAULT_CKPT_PREDIR>/<dataset>/best_model.pth
+python eval_videoqa.py --dataset <dataset> \ 
+--pretrain_path <DEFAULT_CKPT_PREDIR>/<dataset>/best_model.pth
 ```
 
 **VideoQA Demo**: Using a trained checkpoint, you can also run a VideoQA example with a video file of your choice, and the question of your choice. For that, use (the dataset indicated here is only used for the definition of the answer vocabulary):
 ```
-python demo_videoqa.py --dataset <dataset> --pretrain_path <DEFAULT_CKPT_PREDIR>/<dataset>/best_model.pth --question_example <question> --video_example <video_path>
+python demo_videoqa.py --dataset <dataset> \ 
+--pretrain_path <DEFAULT_CKPT_PREDIR>/<dataset>/best_model.pth \ 
+--question_example <question> --video_example <video_path>
 ```
 
 ## Acknowledgements
