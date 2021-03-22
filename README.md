@@ -122,7 +122,7 @@ python main_videoqa.py --num_thread_reader=16 --checkpoint_dir=<dataset> --mlm_p
 
 **Training from scratch**: VQA-T trained from scratch is simply obtained by running the previous script with no `pretrain_path` set.
 
-**Zero-shot**: Zero-shot VideoQA can simply be performed by adding `--test 1`. In the case of QA-T, also add `--baseline qa`. In the case of VQA-T pretrained on HowTo100M, run:
+**Zero-shot**: For our model, Zero-shot VideoQA can simply be performed by adding `--test 1`. In the case of QA-T, also add `--baseline qa`. In the case of VQA-T pretrained on HowTo100M, run:
 ```
 python eval_videoqa_cm.py --num_thread_reader=16 --checkpoint_dir=<dataset> --dataset=<dataset> --pretrain_path=<DEFAULT_CKPT_PREDIR>/pthtm/e9.pth
 ```
