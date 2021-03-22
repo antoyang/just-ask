@@ -48,15 +48,21 @@ class HowTo_Dataset(Dataset):
         k = min(n_pair_max, n_caption)
         starts = np.zeros(k)
         ends = np.zeros(k)
-        text = [''] * k
+        text = [""] * k
         r_ind = np.random.choice(range(n_caption), k, replace=False)
 
         for i in range(k):
             ind = r_ind[i]
             text[i], starts[i], ends[i] = self._get_single_text(caption, ind)
 
-        text_embds = tokenize(text, self.bert_tokenizer, add_special_tokens=True, max_length=self.max_words,
-                            dynamic_padding=True, truncation=True)
+        text_embds = tokenize(
+            text,
+            self.bert_tokenizer,
+            add_special_tokens=True,
+            max_length=self.max_words,
+            dynamic_padding=True,
+            truncation=True,
+        )
 
         return text_embds, text, starts, ends
 
@@ -119,7 +125,9 @@ class HowTo_Dataset(Dataset):
     def __getitem__(self, idx):
         video_id = self.csv["video_id"].values[idx]
         vid_path = self.csv["video_path"].values[idx]
-        text, caption, starts, ends = self._get_text(self.caption[video_id], self.n_pair)
+        text, caption, starts, ends = self._get_text(
+            self.caption[video_id], self.n_pair
+        )
         video, video_len = self._get_video(vid_path, starts, ends)
         return {
             "video": video,
@@ -127,21 +135,22 @@ class HowTo_Dataset(Dataset):
             "text": text,
         }
 
+
 def howto_collate_fn(batch):
     """
     :param batch: [dataset[i] for i in N]
     :return: tensorized batch with the text padded to the max length of the batch
     """
     bs = len(batch)
-    video = torch.cat([batch[i]['video'] for i in range(bs)], 0)
-    video_len = torch.cat([batch[i]['video_len'] for i in range(bs)], 0)
-    text = [batch[i]['text'] for i in range(bs)]
+    video = torch.cat([batch[i]["video"] for i in range(bs)], 0)
+    video_len = torch.cat([batch[i]["video_len"] for i in range(bs)], 0)
+    text = [batch[i]["text"] for i in range(bs)]
     maxlen = max([x.shape[1] for x in text])
     text_padded = torch.zeros(sum(x.shape[0] for x in text), maxlen).long()
     idx = 0
     for i, tensor in enumerate(text):
         n, l = tensor.shape
-        text_padded[idx: idx + n, :l] = tensor
+        text_padded[idx : idx + n, :l] = tensor
         idx += n
 
     return {
@@ -149,4 +158,3 @@ def howto_collate_fn(batch):
         "video_len": video_len,
         "text": text_padded,
     }
-

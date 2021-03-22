@@ -11,7 +11,11 @@ from torch.optim.lr_scheduler import StepLR
 import logging
 from transformers import DistilBertTokenizer
 from data.howto_loader import HowTo_Dataset, howto_collate_fn
-from data.videotext_loader import VideoText_Dataset, Youcook_Dataset, videotext_collate_fn
+from data.videotext_loader import (
+    VideoText_Dataset,
+    Youcook_Dataset,
+    videotext_collate_fn,
+)
 from model.multimodal_transformer import MMT_VideoQA
 from train.train_htm import train_mlmcm, eval_mlm, eval_retrieval
 
@@ -56,9 +60,7 @@ model.cuda()
 # Load captions, dataloaders
 caption = pickle.load(open(args.caption_path, "rb"))
 logging.info("Pickle loaded")
-bert_tokenizer = DistilBertTokenizer.from_pretrained(
-            "distilbert-base-uncased"
-        )
+bert_tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-uncased")
 
 dataset = HowTo_Dataset(
     csv_path=args.train_csv_path,
@@ -69,7 +71,7 @@ dataset = HowTo_Dataset(
     max_words=args.qmax_words,
     min_words=args.min_words,
     n_pair=args.n_pair,
-    bert_tokenizer=bert_tokenizer
+    bert_tokenizer=bert_tokenizer,
 )
 
 dataset_size = len(dataset)
@@ -80,38 +82,38 @@ dataloader = DataLoader(
     shuffle=True,
     batch_sampler=None,
     drop_last=True,
-    collate_fn=howto_collate_fn
+    collate_fn=howto_collate_fn,
 )
 
 youcook_dataset = Youcook_Dataset(
-        data=args.youcook_val_path,
-        max_words=args.qmax_words,
-        bert_tokenizer = bert_tokenizer,
-        max_feats=args.max_feats,
-    )
+    data=args.youcook_val_path,
+    max_words=args.qmax_words,
+    bert_tokenizer=bert_tokenizer,
+    max_feats=args.max_feats,
+)
 youcook_loader = DataLoader(
-        youcook_dataset,
-        batch_size=args.batch_size_val,
-        num_workers=args.num_thread_reader,
-        shuffle=False,
-        collate_fn=videotext_collate_fn
-    )
+    youcook_dataset,
+    batch_size=args.batch_size_val,
+    num_workers=args.num_thread_reader,
+    shuffle=False,
+    collate_fn=videotext_collate_fn,
+)
 
 msrvtt_dataset = VideoText_Dataset(
-        csv_path=args.msrvtt_test_csv_path,
-        features_path=args.msrvtt_test_features_path,
-        max_words=args.qmax_words,
-        bert_tokenizer = bert_tokenizer,
-        max_feats = args.max_feats,
-    )
+    csv_path=args.msrvtt_test_csv_path,
+    features_path=args.msrvtt_test_features_path,
+    max_words=args.qmax_words,
+    bert_tokenizer=bert_tokenizer,
+    max_feats=args.max_feats,
+)
 msrvtt_loader = DataLoader(
-        msrvtt_dataset,
-        batch_size=args.batch_size_val,
-        num_workers=args.num_thread_reader,
-        shuffle=False,
-        drop_last=False,
-        collate_fn=videotext_collate_fn
-    )
+    msrvtt_dataset,
+    batch_size=args.batch_size_val,
+    num_workers=args.num_thread_reader,
+    shuffle=False,
+    drop_last=False,
+    collate_fn=videotext_collate_fn,
+)
 
 # Optimizer, Scheduler
 params_for_optimization = list(p for p in model.parameters() if p.requires_grad)
@@ -120,13 +122,13 @@ scheduler = StepLR(optimizer, step_size=len(dataloader), gamma=args.lr_decay)
 
 # Train
 for epoch in range(args.epochs):
-    eval_mlm(model, youcook_loader, 'YouCook2', epoch)
-    eval_retrieval(model, youcook_loader, 'YouCook2', epoch)
-    eval_mlm(model, msrvtt_loader, 'MSR-VTT', epoch)
-    eval_retrieval(model, msrvtt_loader, 'MSR-VTT', epoch)
+    eval_mlm(model, youcook_loader, "YouCook2", epoch)
+    eval_retrieval(model, youcook_loader, "YouCook2", epoch)
+    eval_mlm(model, msrvtt_loader, "MSR-VTT", epoch)
+    eval_retrieval(model, msrvtt_loader, "MSR-VTT", epoch)
     train_mlmcm(model, optimizer, dataloader, scheduler, epoch, args)
     torch.save(model.state_dict(), os.path.join(args.save_dir, f"e{epoch}.pth"))
-eval_mlm(model, youcook_loader, 'YouCook2', args.epochs)
-eval_retrieval(model, youcook_loader, 'YouCook2', args.epochs)
-eval_mlm(model, msrvtt_loader, 'MSR-VTT', args.epochs)
-eval_retrieval(model, msrvtt_loader, 'MSR-VTT', args.epochs)
+eval_mlm(model, youcook_loader, "YouCook2", args.epochs)
+eval_retrieval(model, youcook_loader, "YouCook2", args.epochs)
+eval_mlm(model, msrvtt_loader, "MSR-VTT", args.epochs)
+eval_retrieval(model, msrvtt_loader, "MSR-VTT", args.epochs)

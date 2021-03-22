@@ -443,9 +443,25 @@ class MMT_VideoQA(nn.Module):
             question = self.bert(question)
             if question.shape[1] < self.Q:
                 question = torch.cat(
-                    [question, torch.zeros(question.shape[0], self.Q - question.shape[1], question.shape[2]).cuda()], 1)
-                text_mask = torch.cat([text_mask, torch.zeros(text_mask.shape[0], self.Q - text_mask.shape[1]).cuda()],
-                                        1)
+                    [
+                        question,
+                        torch.zeros(
+                            question.shape[0],
+                            self.Q - question.shape[1],
+                            question.shape[2],
+                        ).cuda(),
+                    ],
+                    1,
+                )
+                text_mask = torch.cat(
+                    [
+                        text_mask,
+                        torch.zeros(
+                            text_mask.shape[0], self.Q - text_mask.shape[1]
+                        ).cuda(),
+                    ],
+                    1,
+                )
             if self.baseline == "qa":
                 question_proj = self.get_question_embedding(question)
                 vq_cat = torch.cat(
@@ -486,14 +502,38 @@ class MMT_VideoQA(nn.Module):
 
         elif mode == "mlm":
             if text_mask.shape[1] < self.Q:
-                text_mask = torch.cat([text_mask, torch.zeros(text_mask.shape[0], self.Q - text_mask.shape[1]).cuda()], 1)
-                labels = torch.cat([labels, -100 * torch.ones(labels.shape[0], self.Q - labels.shape[1]).long().cuda()], 1)
+                text_mask = torch.cat(
+                    [
+                        text_mask,
+                        torch.zeros(
+                            text_mask.shape[0], self.Q - text_mask.shape[1]
+                        ).cuda(),
+                    ],
+                    1,
+                )
+                labels = torch.cat(
+                    [
+                        labels,
+                        -100
+                        * torch.ones(labels.shape[0], self.Q - labels.shape[1])
+                        .long()
+                        .cuda(),
+                    ],
+                    1,
+                )
             mask = torch.cat([text_mask, video_mask], dim=1)
             video_proj = self.get_video_embedding(video)
             text = self.bert(question)
             if text.shape[1] < self.Q:
                 text = torch.cat(
-                    [text, torch.zeros(text.shape[0], self.Q - text.shape[1], text.shape[2]).cuda()], 1)
+                    [
+                        text,
+                        torch.zeros(
+                            text.shape[0], self.Q - text.shape[1], text.shape[2]
+                        ).cuda(),
+                    ],
+                    1,
+                )
             text_proj = self.get_question_embedding(text)
             vq_cat = torch.cat([text_proj, video_proj], dim=1)
             vq = self.position(vq_cat)
@@ -513,9 +553,23 @@ class MMT_VideoQA(nn.Module):
             text = self.bert(question)
             if text.shape[1] < self.Q:
                 text = torch.cat(
-                    [text, torch.zeros(text.shape[0], self.Q - text.shape[1], text.shape[2]).cuda()], 1)
-                text_mask = torch.cat([text_mask, torch.zeros(text_mask.shape[0], self.Q - text_mask.shape[1]).cuda()],
-                                      1)
+                    [
+                        text,
+                        torch.zeros(
+                            text.shape[0], self.Q - text.shape[1], text.shape[2]
+                        ).cuda(),
+                    ],
+                    1,
+                )
+                text_mask = torch.cat(
+                    [
+                        text_mask,
+                        torch.zeros(
+                            text_mask.shape[0], self.Q - text_mask.shape[1]
+                        ).cuda(),
+                    ],
+                    1,
+                )
             text_proj = self.get_question_embedding(text)
 
             positives_vt = torch.cat([text_proj, video_proj], dim=1)
@@ -578,9 +632,23 @@ class MMT_VideoQA(nn.Module):
             text = self.bert(question)
             if text.shape[1] < self.Q:
                 text = torch.cat(
-                    [text, torch.zeros(text.shape[0], self.Q - text.shape[1], text.shape[2]).cuda()], 1)
-                text_mask = torch.cat([text_mask, torch.zeros(text_mask.shape[0], self.Q - text_mask.shape[1]).cuda()],
-                                      1)
+                    [
+                        text,
+                        torch.zeros(
+                            text.shape[0], self.Q - text.shape[1], text.shape[2]
+                        ).cuda(),
+                    ],
+                    1,
+                )
+                text_mask = torch.cat(
+                    [
+                        text_mask,
+                        torch.zeros(
+                            text_mask.shape[0], self.Q - text_mask.shape[1]
+                        ).cuda(),
+                    ],
+                    1,
+                )
             text_proj = self.get_question_embedding(text)
             text_proj_rep = text_proj.repeat(len(video), 1, 1)
             text_mask_rep = text_mask.repeat(len(video), 1)
@@ -598,9 +666,23 @@ class MMT_VideoQA(nn.Module):
             text_mask = text_mask.squeeze()
             if text.shape[1] < self.Q:
                 text = torch.cat(
-                    [text, torch.zeros(text.shape[0], self.Q - text.shape[1], text.shape[2]).cuda()], 1)
-                text_mask = torch.cat([text_mask, torch.zeros(text_mask.shape[0], self.Q - text_mask.shape[1]).cuda()],
-                                      1)
+                    [
+                        text,
+                        torch.zeros(
+                            text.shape[0], self.Q - text.shape[1], text.shape[2]
+                        ).cuda(),
+                    ],
+                    1,
+                )
+                text_mask = torch.cat(
+                    [
+                        text_mask,
+                        torch.zeros(
+                            text_mask.shape[0], self.Q - text_mask.shape[1]
+                        ).cuda(),
+                    ],
+                    1,
+                )
             text_proj = self.get_question_embedding(text)
             video_proj = self.get_video_embedding(video)
             video_proj_rep = video_proj.repeat(len(text), 1, 1)

@@ -22,23 +22,22 @@ def eval_sqa(model, val_loader, args):
             video_mask = get_mask(video_len, video.size(1)).cuda()
             question_mask = (question > 0).float()
             count += answer.size(0)
-            atxt_unique, ans_idx, ans_inv = np.unique(batch['atxt'], return_index=True,
-                                                          return_inverse=True)  # only keep unique answers
+            atxt_unique, ans_idx, ans_inv = np.unique(
+                batch["atxt"], return_index=True, return_inverse=True
+            )  # only keep unique answers
             answer = answer[ans_idx]
 
             fusion_proj, answer_proj = model(
-                    video,
-                    question=question,
-                    answer=answer,
-                    text_mask=question_mask,
-                    video_mask=video_mask,
+                video,
+                question=question,
+                answer=answer,
+                text_mask=question_mask,
+                video_mask=video_mask,
             )
             predicts = fusion_proj @ (answer_proj.t())
 
             topk = torch.topk(predicts, dim=1, k=10).indices.cpu()
-            answer_id_expanded = (
-                torch.from_numpy(ans_inv).view(-1, 1).expand_as(topk)
-            )
+            answer_id_expanded = torch.from_numpy(ans_inv).view(-1, 1).expand_as(topk)
             metrics = compute_aggreeings(
                 topk,
                 answer_id_expanded,
@@ -49,7 +48,9 @@ def eval_sqa(model, val_loader, args):
 
             if args.mlm_prob:
                 inputs, labels = mask_tokens(
-                    question.cpu(), model.module.bert.bert_tokenizer, mlm_probability=0.15
+                    question.cpu(),
+                    model.module.bert.bert_tokenizer,
+                    mlm_probability=0.15,
                 )
                 mlm_loss = model(
                     video,
@@ -85,15 +86,17 @@ def train_sqa(model, train_loader, optimizer, criterion, scheduler, epoch, args)
         video_mask = get_mask(video_len, video.size(1)).cuda()
         question_mask = (question > 0).float()
         N = answer.size(0)
-        atxt_unique, ans_idx, ans_inv = np.unique(batch['atxt'], return_index=True, return_inverse=True) # only keep unique answers
+        atxt_unique, ans_idx, ans_inv = np.unique(
+            batch["atxt"], return_index=True, return_inverse=True
+        )  # only keep unique answers
         answer = answer[ans_idx]
 
         fusion_proj, answer_proj = model(
-                video,
-                question=question,
-                answer=answer,
-                text_mask=question_mask,
-                video_mask=video_mask,
+            video,
+            question=question,
+            answer=answer,
+            text_mask=question_mask,
+            video_mask=video_mask,
         )
         predicts = fusion_proj @ (answer_proj.t())
         target = torch.from_numpy(ans_inv).cuda()
@@ -134,6 +137,7 @@ def train_sqa(model, train_loader, optimizer, criterion, scheduler, epoch, args)
                 )
             else:
                 logging.info(
-                        f"Epoch {epoch + 1}, Epoch status: {float(i + 1) / len(train_loader):.4f}, Training loss: {running_vqa_loss.avg:.4f}")
+                    f"Epoch {epoch + 1}, Epoch status: {float(i + 1) / len(train_loader):.4f}, Training loss: {running_vqa_loss.avg:.4f}"
+                )
             running_vqa_loss.reset()
             running_mlm_loss.reset()

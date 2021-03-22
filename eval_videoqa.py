@@ -118,13 +118,13 @@ np.random.seed(args.seed)
 random.seed(args.seed)
 
 # get answer embeddings
-bert_tokenizer = DistilBertTokenizer.from_pretrained(
-            "distilbert-base-uncased"
-        )
+bert_tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-uncased")
 a2id, id2a, a2v = None, None, None
 if not args.mc:
     a2id, id2a, a2v = compute_a2v(
-        vocab_path=args.vocab_path, bert_tokenizer=bert_tokenizer, amax_words=args.amax_words
+        vocab_path=args.vocab_path,
+        bert_tokenizer=bert_tokenizer,
+        amax_words=args.amax_words,
     )
 
 # Model

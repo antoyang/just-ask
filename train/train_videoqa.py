@@ -28,7 +28,10 @@ def eval(model, val_loader, a2v, args, test=False):
 
             if not args.mc:
                 predicts = model(
-                    video, question, text_mask=question_mask, video_mask=video_mask,
+                    video,
+                    question,
+                    text_mask=question_mask,
+                    video_mask=video_mask,
                 )
                 topk = torch.topk(predicts, dim=1, k=10).indices.cpu()
                 if args.dataset != "ivqa":
@@ -46,8 +49,11 @@ def eval(model, val_loader, a2v, args, test=False):
                 )
             else:
                 fusion_proj, answer_proj = model(
-                    video, question, text_mask=question_mask, video_mask=video_mask,
-                    answer=answer.cuda()
+                    video,
+                    question,
+                    text_mask=question_mask,
+                    video_mask=video_mask,
+                    answer=answer.cuda(),
                 )
                 fusion_proj = fusion_proj.unsqueeze(2)
                 predicts = torch.bmm(answer_proj, fusion_proj).squeeze()
@@ -64,7 +70,11 @@ def eval(model, val_loader, a2v, args, test=False):
 
 def train(model, train_loader, a2v, optimizer, criterion, scheduler, epoch, args):
     model.train()
-    running_vqa_loss, running_acc, running_mlm_loss = AverageMeter(), AverageMeter(), AverageMeter()
+    running_vqa_loss, running_acc, running_mlm_loss = (
+        AverageMeter(),
+        AverageMeter(),
+        AverageMeter(),
+    )
     for i, batch in enumerate(train_loader):
         answer_id, answer, video, question = (
             batch["answer_id"],
@@ -81,12 +91,18 @@ def train(model, train_loader, a2v, optimizer, criterion, scheduler, epoch, args
         if not args.mc:
             model.module._compute_answer_embedding(a2v)
             predicts = model(
-                video, question, text_mask=question_mask, video_mask=video_mask,
+                video,
+                question,
+                text_mask=question_mask,
+                video_mask=video_mask,
             )
         else:
             fusion_proj, answer_proj = model(
-                video, question, text_mask=question_mask, video_mask=video_mask,
-                answer=answer.cuda()
+                video,
+                question,
+                text_mask=question_mask,
+                video_mask=video_mask,
+                answer=answer.cuda(),
             )
             fusion_proj = fusion_proj.unsqueeze(2)
             predicts = torch.bmm(answer_proj, fusion_proj).squeeze()

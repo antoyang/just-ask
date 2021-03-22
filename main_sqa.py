@@ -79,7 +79,7 @@ train_loader = DataLoader(
     num_workers=args.num_thread_reader,
     shuffle=True,
     drop_last=True,
-    collate_fn=sqa_collate_fn
+    collate_fn=sqa_collate_fn,
 )
 
 valset = SQA_Dataset(
@@ -100,7 +100,7 @@ val_loader = DataLoader(
     num_workers=args.num_thread_reader,
     shuffle=False,
     drop_last=False,
-    collate_fn=sqa_collate_fn
+    collate_fn=sqa_collate_fn,
 )
 
 logging.info("number of train videos: {}".format(len(train_loader.dataset)))

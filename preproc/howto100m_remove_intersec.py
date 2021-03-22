@@ -3,7 +3,14 @@ import pandas as pd
 import json
 import os
 
-from global_parameters import IVQA_PATH, MSRVTT_PATH, MSVD_PATH, ACT_PATH, HOWTO_PATH, HOW2QA_PATH
+from global_parameters import (
+    IVQA_PATH,
+    MSRVTT_PATH,
+    MSVD_PATH,
+    ACT_PATH,
+    HOWTO_PATH,
+    HOW2QA_PATH,
+)
 
 # Load HowTo100M narrations and csv
 videos = pickle.load(

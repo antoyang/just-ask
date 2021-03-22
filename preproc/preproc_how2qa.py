@@ -14,11 +14,22 @@ print(len(val_csv))
 count = {}
 path = os.path.join(SSD_DIR, "s3d_features", "howto100m_s3d_features")
 
+
 def process(df):
     idx = [[1, 2, 3, 4] for _ in range(len(df))]
     for i in range(len(idx)):
         np.random.shuffle(idx[i])
-    ids, a1, a2, a3, a4, answer, question, starts, ends = [], [], [], [], [], [], [], [], []
+    ids, a1, a2, a3, a4, answer, question, starts, ends = (
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+    )
     for i, row in tqdm(df.iterrows()):
         start = int(float(row["timesteps"].split(":")[0][1:]))
         end = int(float(row["timesteps"].split(":")[1][:-1]))
@@ -34,6 +45,7 @@ def process(df):
         answer.append(idx[i].index(1))
         question.append(row["question"])
     return question, answer, ids, a1, a2, a3, a4, starts, ends
+
 
 question, answer, ids, a1, a2, a3, a4, starts, ends = process(train_csv)
 train_df = pd.DataFrame(
@@ -71,4 +83,6 @@ print(len(val_df))
 
 train_df.to_csv(os.path.join(HOW2QA_PATH, "train.csv"), index=False)
 val_df.to_csv(os.path.join(HOW2QA_PATH, "val.csv"), index=False)
-val_df.to_csv(os.path.join(HOW2QA_PATH, "test.csv"), index=False) # evaluation on the public val
+val_df.to_csv(
+    os.path.join(HOW2QA_PATH, "test.csv"), index=False
+)  # evaluation on the public val

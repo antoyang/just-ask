@@ -7,13 +7,15 @@ import math
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import argparse
 import sys
+
 sys.path.insert(0, os.getcwd())
 from global_parameters import TRANSFORMERS_PATH, qas_dir, HOWTO_PATH
 
+
 class Question_Generation_Dataset(Dataset):
     def __init__(self, caption, ext_answers, tokenizer):
-        self.data = caption # dictionary mapping vid_id to lists of text, start, end
-        self.answers = ext_answers # dictionary mapping vid_id to list of answers, index corresponding to the original text
+        self.data = caption  # dictionary mapping vid_id to lists of text, start, end
+        self.answers = ext_answers  # dictionary mapping vid_id to list of answers, index corresponding to the original text
         self.video_ids = list(ext_answers.keys())
         self.tokenizer = tokenizer
 
@@ -64,7 +66,7 @@ class Question_Generation_Dataset(Dataset):
             "answers": answer,
             "video_id": vid,
             "start": start,
-            "end": end
+            "end": end,
         }
 
     def __len__(self):
@@ -89,30 +91,30 @@ videos = pickle.load(
 )
 ext_answers = pickle.load(
     open(
-        os.path.join(
-            HOWTO_PATH, "sqa_answers.pickle"
-        ),
+        os.path.join(HOWTO_PATH, "sqa_answers.pickle"),
         "rb",
     )
 )
 
 done = os.listdir(qas_dir)
 doneset = set(x[:11] for x in done)
-videos = {x:y for x,y in videos.items() if x not in doneset}
-ext_answers = {x:y for x,y in ext_answers.items() if x not in doneset}
+videos = {x: y for x, y in videos.items() if x not in doneset}
+ext_answers = {x: y for x, y in ext_answers.items() if x not in doneset}
 
 # Answer-aware question generation transformer model
-tokenizer = AutoTokenizer.from_pretrained("valhalla/t5-base-qg-hl", cache_dir=TRANSFORMERS_PATH)
+tokenizer = AutoTokenizer.from_pretrained(
+    "valhalla/t5-base-qg-hl", cache_dir=TRANSFORMERS_PATH
+)
 model = AutoModelForSeq2SeqLM.from_pretrained(
     "valhalla/t5-base-qg-hl", cache_dir=TRANSFORMERS_PATH
 )
 model.cuda()
 
 # Dataloader
-dataset = Question_Generation_Dataset(caption=videos, ext_answers = ext_answers, tokenizer=tokenizer)
-dataloader = DataLoader(
-    dataset, batch_size=1, num_workers=args.n_workers, shuffle=True
+dataset = Question_Generation_Dataset(
+    caption=videos, ext_answers=ext_answers, tokenizer=tokenizer
 )
+dataloader = DataLoader(dataset, batch_size=1, num_workers=args.n_workers, shuffle=True)
 for i, batch in tqdm(enumerate(dataloader)):
     text, input_ids, attention_mask, answers, video_id, start, end = (
         batch["text"],
@@ -121,7 +123,7 @@ for i, batch in tqdm(enumerate(dataloader)):
         batch["answers"],
         batch["video_id"][0],
         batch["start"].squeeze(0),
-        batch["end"].squeeze(0)
+        batch["end"].squeeze(0),
     )
 
     # Verify if the video has already been processed
@@ -133,13 +135,23 @@ for i, batch in tqdm(enumerate(dataloader)):
     outs = torch.zeros(len(input_ids), args.max_length).long()
     with torch.no_grad():
         for k in range(n_iter):
-            batch_outputs = model.generate(
-                input_ids=input_ids[k * args.batch_size: (k + 1) * args.batch_size],
-                attention_mask=attention_mask[k * args.batch_size: (k + 1) * args.batch_size],
-                max_length=args.max_length,
-                num_beams=args.num_beams,
-            ).detach().cpu()
-            outs[k * args.batch_size: (k + 1) * args.batch_size, :batch_outputs.size(1)] = batch_outputs
+            batch_outputs = (
+                model.generate(
+                    input_ids=input_ids[
+                        k * args.batch_size : (k + 1) * args.batch_size
+                    ],
+                    attention_mask=attention_mask[
+                        k * args.batch_size : (k + 1) * args.batch_size
+                    ],
+                    max_length=args.max_length,
+                    num_beams=args.num_beams,
+                )
+                .detach()
+                .cpu()
+            )
+            outs[
+                k * args.batch_size : (k + 1) * args.batch_size, : batch_outputs.size(1)
+            ] = batch_outputs
 
     # Decoding
     questions = [tokenizer.decode(ids, skip_special_tokens=True) for ids in outs]
@@ -157,10 +169,13 @@ for i, batch in tqdm(enumerate(dataloader)):
     # Save
     if os.path.exists(os.path.join(qas_dir, video_id + ".pkl")):
         continue
-    pickle.dump({"text": text,
-                 "question": questions,
-                 "answer": answers,
-                 "start": start,
-                 "end": end},
-            open(os.path.join(qas_dir, video_id + ".pkl"), "wb"),
-        )
+    pickle.dump(
+        {
+            "text": text,
+            "question": questions,
+            "answer": answers,
+            "start": start,
+            "end": end,
+        },
+        open(os.path.join(qas_dir, video_id + ".pkl"), "wb"),
+    )

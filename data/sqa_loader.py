@@ -44,16 +44,18 @@ class SQA_Dataset(Dataset):
     def __len__(self):
         return len(self.data)
 
-    def _get_text(self, caption, n_pair_max, train = True):
+    def _get_text(self, caption, n_pair_max, train=True):
         n_caption = len(caption["start"])
         n_pair_max = min(n_caption, n_pair_max)
         start = np.zeros(n_pair_max)
         end = np.zeros(n_pair_max)
         atxt = [""] * n_pair_max
         qtxt = [""] * n_pair_max
-        r_ind = np.random.choice(
-            range(n_caption), n_pair_max, replace=False
-        ) if train else np.arange(n_pair_max) # sample clips
+        r_ind = (
+            np.random.choice(range(n_caption), n_pair_max, replace=False)
+            if train
+            else np.arange(n_pair_max)
+        )  # sample clips
 
         for i in range(n_pair_max):
             ind = r_ind[i]
@@ -64,10 +66,22 @@ class SQA_Dataset(Dataset):
                 caption["end"][ind],
             )
 
-        question = tokenize(qtxt, self.bert_tokenizer, add_special_tokens=True, max_length=self.qmax_words,
-                            dynamic_padding=True, truncation=True)
-        answer = tokenize(atxt, self.bert_tokenizer, add_special_tokens=True, max_length=self.amax_words,
-                            dynamic_padding=True, truncation=True)
+        question = tokenize(
+            qtxt,
+            self.bert_tokenizer,
+            add_special_tokens=True,
+            max_length=self.qmax_words,
+            dynamic_padding=True,
+            truncation=True,
+        )
+        answer = tokenize(
+            atxt,
+            self.bert_tokenizer,
+            add_special_tokens=True,
+            max_length=self.amax_words,
+            dynamic_padding=True,
+            truncation=True,
+        )
 
         return start, end, atxt, answer, qtxt, question
 
@@ -96,7 +110,7 @@ class SQA_Dataset(Dataset):
         video_id = self.data["video_id"].values[idx]
         video_path = self.data["video_path"].values[idx]
         start, end, atxt, answer, qtxt, question = self._get_text(
-            self.caption[video_id], self.n_pair, train = self.train
+            self.caption[video_id], self.n_pair, train=self.train
         )
         video, video_len = self._get_video(video_path, start, end)
 
@@ -113,52 +127,54 @@ class SQA_Dataset(Dataset):
             "question": question,
         }
 
+
 def sqa_collate_fn(batch):
     """
     :param batch: [dataset[i] for i in N]
     :return: tensorized batch with the question and the ans candidates padded to the max length of the batch
     """
     bs = len(batch)
-    video_id = default_collate([batch[i]['video_id'] for i in range(bs)])
-    video_path = default_collate([batch[i]['video_path'] for i in range(bs)])
-    atxt = [batch[i]['atxt'] for i in range(bs)]
+    video_id = default_collate([batch[i]["video_id"] for i in range(bs)])
+    video_path = default_collate([batch[i]["video_path"] for i in range(bs)])
+    atxt = [batch[i]["atxt"] for i in range(bs)]
     atxt = [x for y in atxt for x in y]
-    qtxt = [batch[i]['qtxt'] for i in range(bs)]
+    qtxt = [batch[i]["qtxt"] for i in range(bs)]
     qtxt = [x for y in qtxt for x in y]
-    start = torch.cat([torch.from_numpy(batch[i]['start']) for i in range(bs)], 0)
-    end = torch.cat([torch.from_numpy(batch[i]['end']) for i in range(bs)], 0)
+    start = torch.cat([torch.from_numpy(batch[i]["start"]) for i in range(bs)], 0)
+    end = torch.cat([torch.from_numpy(batch[i]["end"]) for i in range(bs)], 0)
 
-    video = torch.cat([batch[i]['video'] for i in range(bs)], 0)
-    video_len = torch.cat([torch.from_numpy(batch[i]['video_len']) for i in range(bs)], 0)
+    video = torch.cat([batch[i]["video"] for i in range(bs)], 0)
+    video_len = torch.cat(
+        [torch.from_numpy(batch[i]["video_len"]) for i in range(bs)], 0
+    )
 
-    ans = [batch[i]['answer'] for i in range(bs)]
+    ans = [batch[i]["answer"] for i in range(bs)]
     maxalen = max([x.shape[1] for x in ans])
     answer = torch.zeros(sum(x.shape[0] for x in ans), maxalen).long()
     idx = 0
     for i, tensor in enumerate(ans):
         n, l = tensor.shape
-        answer[idx: idx + n, :l] = tensor
+        answer[idx : idx + n, :l] = tensor
         idx += n
 
-    que = [batch[i]['question'] for i in range(bs)]
+    que = [batch[i]["question"] for i in range(bs)]
     maxquelen = max([x.shape[1] for x in que])
     question = torch.zeros(sum(x.shape[0] for x in que), maxquelen).long()
     idx = 0
     for i, tensor in enumerate(que):
         n, l = tensor.shape
-        question[idx: idx + n, :l] = tensor
+        question[idx : idx + n, :l] = tensor
         idx += n
 
-
     return {
-            "video_id": video_id,
-            "video_path": video_path,
-            "atxt": atxt,
-            "qtxt": qtxt,
-            "start": start,
-            "end": end,
-            "video": video,
-            "video_len": video_len,
-            "answer": answer,
-            "question": question,
-        }
+        "video_id": video_id,
+        "video_path": video_path,
+        "atxt": atxt,
+        "qtxt": qtxt,
+        "start": start,
+        "end": end,
+        "video": video,
+        "video_len": video_len,
+        "answer": answer,
+        "question": question,
+    }

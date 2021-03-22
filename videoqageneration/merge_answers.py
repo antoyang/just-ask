@@ -2,6 +2,7 @@ import os
 import pickle
 from tqdm import tqdm
 import sys
+
 sys.path.insert(0, os.getcwd())
 from global_parameters import answers_dir, HOWTO_PATH
 
@@ -19,7 +20,7 @@ videos = pickle.load(
 sqa = {}
 for file in tqdm(files):
     if os.path.exists(os.path.join(answers_dir, file)):
-    # Load extracted answers
+        # Load extracted answers
         try:
             video_answers = pickle.load(open(os.path.join(answers_dir, file), "rb"))
         except EOFError:

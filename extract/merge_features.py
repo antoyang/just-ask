@@ -62,7 +62,7 @@ elif args.dataset == "how2qa":
     df = pd.concat([traindf, valdf, testdf])
     clip2timesteps = {}
     for i, x in df.iterrows():
-        clip2timesteps[x['video_id']] = [x['start'], x['end']]
+        clip2timesteps[x["video_id"]] = [x["start"], x["end"]]
 
 else:
     raise NotImplementedError
@@ -81,8 +81,8 @@ else:
     for x in tqdm(clip2timesteps):
         video_id = x[:11]
         start, end = clip2timesteps[x]
-        feat = torch.from_numpy(np.load(os.path.join(args.folder, video_id + '.mp4')))
-        feat = feat[start: end + 1]
+        feat = torch.from_numpy(np.load(os.path.join(args.folder, video_id + ".mp4")))
+        feat = feat[start : end + 1]
         if args.pad and len(feat) < args.pad:
             feat = torch.cat([feat, torch.zeros(args.pad - len(feat), feat.shape[1])])
         elif args.pad:

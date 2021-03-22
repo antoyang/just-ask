@@ -16,14 +16,23 @@ def get_args():
         "--dataset",
         type=str,
         default="ivqa",
-        choices=["ivqa", "msrvtt", "msvd", "tgif", "activitynet", "howto100m", "sqa", "how2qa"],
+        choices=[
+            "ivqa",
+            "msrvtt",
+            "msvd",
+            "tgif",
+            "activitynet",
+            "howto100m",
+            "sqa",
+            "how2qa",
+        ],
     )
     parser.add_argument(
         "--subset",
         type=str,
         default="",
         choices=["", "1", "10", "20", "50"],
-        help="use a subset of the generated dataset"
+        help="use a subset of the generated dataset",
     )
 
     # Model
@@ -138,9 +147,7 @@ def get_args():
     parser.add_argument(
         "--lr", type=float, default=0.00005, help="initial learning rate"
     )
-    parser.add_argument(
-        "--weight_decay", type=float, default=0, help="weight decay"
-    )
+    parser.add_argument("--weight_decay", type=float, default=0, help="weight decay")
     parser.add_argument(
         "--clip",
         type=float,
@@ -164,10 +171,14 @@ def get_args():
     parser.add_argument("--min_words", type=int, default=10)
 
     # Demo parameters
-    parser.add_argument("--question_example", type=str, default="", help="demo question text")
+    parser.add_argument(
+        "--question_example", type=str, default="", help="demo question text"
+    )
     parser.add_argument("--video_example", type=str, default="", help="demo video path")
     parser.add_argument("--port", type=int, default=8899, help="demo port")
-    parser.add_argument("--pretrain_path2", type=str, default="", help="second demo model")
+    parser.add_argument(
+        "--pretrain_path2", type=str, default="", help="second demo model"
+    )
 
     args = parser.parse_args()
 
@@ -178,8 +189,8 @@ def get_args():
     args.mc = 4 if args.dataset == "how2qa" else 0
 
     # feature dimension
-    args.feature_dim = 1024 #S3D
-    args.word_dim = 768 #DistilBERT
+    args.feature_dim = 1024  # S3D
+    args.word_dim = 768  # DistilBERT
 
     # Map from dataset name to folder name
 
@@ -193,7 +204,9 @@ def get_args():
         args.test_csv_path = os.path.join(load_path, "test.csv")
         args.vocab_path = os.path.join(load_path, "vocab.json")
     else:  # Pretraining dataset
-        args.features_path = os.path.join(args.ssd_dir, "s3d_features", "howto100m_s3d_features")
+        args.features_path = os.path.join(
+            args.ssd_dir, "s3d_features", "howto100m_s3d_features"
+        )
         if args.dataset == "howto100m":
             args.caption_path = os.path.join(
                 load_path, "caption_howto100m_sw_nointersec_norepeat.pickle"
@@ -201,9 +214,15 @@ def get_args():
             args.train_csv_path = os.path.join(
                 load_path, f"s3d_features_nointersec.csv"
             )
-            args.youcook_val_path = os.path.join(args.dataset_dir, "YouCook2", "youcook_unpooled_val.pkl")
-            args.msrvtt_test_csv_path = os.path.join(args.dataset_dir, "MSR-VTT", "MSRVTT_JSFUSION_test.csv")
-            args.msrvtt_test_features_path = os.path.join(args.dataset_dir, "MSR-VTT", "msrvtt_test_unpooled_s3d_features.pth")
+            args.youcook_val_path = os.path.join(
+                args.dataset_dir, "YouCook2", "youcook_unpooled_val.pkl"
+            )
+            args.msrvtt_test_csv_path = os.path.join(
+                args.dataset_dir, "MSR-VTT", "MSRVTT_JSFUSION_test.csv"
+            )
+            args.msrvtt_test_features_path = os.path.join(
+                args.dataset_dir, "MSR-VTT", "msrvtt_test_unpooled_s3d_features.pth"
+            )
         elif args.dataset == "sqa":
             if not args.subset:
                 args.caption_path = os.path.join(load_path, "sqa.pkl")
@@ -211,7 +230,11 @@ def get_args():
                 args.val_csv_path = os.path.join(load_path, "val_sqa.csv")
             else:
                 args.caption_path = os.path.join(load_path, f"sqa_{args.subset}.pickle")
-                args.train_csv_path = os.path.join(load_path, f"train_sqa_{args.subset}.csv")
-                args.val_csv_path = os.path.join(load_path, f"val_sqa_{args.subset}.csv")
+                args.train_csv_path = os.path.join(
+                    load_path, f"train_sqa_{args.subset}.csv"
+                )
+                args.val_csv_path = os.path.join(
+                    load_path, f"val_sqa_{args.subset}.csv"
+                )
 
     return args

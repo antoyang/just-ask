@@ -14,6 +14,7 @@ from model.multimodal_transformer import MMT_VideoQA
 from util import compute_a2v, tokenize, get_mask, compute_aggreeings
 from tqdm import tqdm
 
+
 class VideoQADataset(Dataset):
     def __init__(
         self,
@@ -26,7 +27,7 @@ class VideoQADataset(Dataset):
         max_feats=20,
         tmp_sample=0,
         id2a=None,
-        mc=0
+        mc=0,
     ):
         self.data = pd.read_csv(csv_path)
         self.features = features
@@ -37,7 +38,7 @@ class VideoQADataset(Dataset):
         self.max_feats = max_feats
         self.tmp_sample = tmp_sample
         self.id2a = id2a
-        self.mc=mc
+        self.mc = mc
 
     def __len__(self):
         return len(self.data)
@@ -73,14 +74,24 @@ class VideoQADataset(Dataset):
             for x in answer_txt:
                 if x in self.a2id:
                     answer_id[self.a2id[x]] = answer_txt[x]
-            answer_txt = ", ".join([str(x) + "(" + str(answer_txt[x]) + ")" for x in answer_txt])
+            answer_txt = ", ".join(
+                [str(x) + "(" + str(answer_txt[x]) + ")" for x in answer_txt]
+            )
         elif self.mc:
             answer_id = int(self.data["answer"][index])
             answer_txt = [self.data["a" + str(i + 1)][index] for i in range(self.mc)]
             question_txt = self.data["question"][index]
-            qa_txt = [question_txt + ' ' + x for x in answer_txt] # concatenate question with each possible answer
-            question_embd = tokenize(qa_txt, self.bert_tokenizer, add_special_tokens=True, max_length=self.qmax_words,
-                              dynamic_padding=True, truncation=True)
+            qa_txt = [
+                question_txt + " " + x for x in answer_txt
+            ]  # concatenate question with each possible answer
+            question_embd = tokenize(
+                qa_txt,
+                self.bert_tokenizer,
+                add_special_tokens=True,
+                max_length=self.qmax_words,
+                dynamic_padding=True,
+                truncation=True,
+            )
         else:
             answer_txt = self.data["answer"].values[index]
             answer_id = self.a2id.get(
@@ -89,9 +100,17 @@ class VideoQADataset(Dataset):
 
         if not self.mc:
             question_txt = self.data["question"][index]
-            qa_txt = [question_txt + ' ' + self.id2a[i] for i in range(len(self.id2a))] # concatenate question with each possible answer
-            question_embd = tokenize(qa_txt, self.bert_tokenizer, add_special_tokens=True, max_length=self.qmax_words,
-                                   dynamic_padding=True, truncation=True)
+            qa_txt = [
+                question_txt + " " + self.id2a[i] for i in range(len(self.id2a))
+            ]  # concatenate question with each possible answer
+            question_embd = tokenize(
+                qa_txt,
+                self.bert_tokenizer,
+                add_special_tokens=True,
+                max_length=self.qmax_words,
+                dynamic_padding=True,
+                truncation=True,
+            )
 
         return {
             "video_id": vid_id,
@@ -101,13 +120,14 @@ class VideoQADataset(Dataset):
             "answer_id": answer_id,
         }
 
+
 def videoqa_collate_fn(batch):
     """
     :param batch: [dataset[i] for i in N]
     :return: tensorized batch with the question and the ans candidates padded to the max length of the batch
     """
     bs = len(batch)
-    que = [batch[i]['question'] for i in range(bs)]
+    que = [batch[i]["question"] for i in range(bs)]
     maxquelen = max([x.shape[-1] for x in que])
     nans = que[0].shape[0]
     question = torch.zeros(bs, nans, maxquelen).long()
@@ -116,12 +136,13 @@ def videoqa_collate_fn(batch):
         question[i, :, :l] = tensor
 
     return {
-            "video_id": default_collate([batch[i]['video_id'] for i in range(bs)]),
-            "video": default_collate([batch[i]['video'] for i in range(bs)]),
-            "video_len": default_collate([batch[i]['video_len'] for i in range(bs)]),
-            "question": question,
-            "answer_id": default_collate([batch[i]['answer_id'] for i in range(bs)]),
-        }
+        "video_id": default_collate([batch[i]["video_id"] for i in range(bs)]),
+        "video": default_collate([batch[i]["video"] for i in range(bs)]),
+        "video_len": default_collate([batch[i]["video_len"] for i in range(bs)]),
+        "question": question,
+        "answer_id": default_collate([batch[i]["answer_id"] for i in range(bs)]),
+    }
+
 
 def eval(model, val_loader, args, test=False):
     model.eval()
@@ -141,7 +162,11 @@ def eval(model, val_loader, args, test=False):
             count += answer_id.size(0)
 
             predicts = model(
-                video, question, text_mask=question_mask, video_mask=video_mask, mode="vqacm"
+                video,
+                question,
+                text_mask=question_mask,
+                video_mask=video_mask,
+                mode="vqacm",
             )
             predicts = predicts.view(answer_id.size(0), -1)
             if not args.mc:
@@ -177,6 +202,7 @@ def eval(model, val_loader, args, test=False):
 
     return metrics["acc"] / count
 
+
 # args, logging
 args = get_args()
 if not (os.path.isdir(args.save_dir)):
@@ -197,13 +223,13 @@ np.random.seed(args.seed)
 random.seed(args.seed)
 
 # get answer embeddings
-bert_tokenizer = DistilBertTokenizer.from_pretrained(
-            "distilbert-base-uncased"
-        )
+bert_tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-uncased")
 a2id, id2a, a2v = None, None, None
 if not args.mc:
     a2id, id2a, a2v = compute_a2v(
-        vocab_path=args.vocab_path, bert_tokenizer=bert_tokenizer, amax_words=args.amax_words
+        vocab_path=args.vocab_path,
+        bert_tokenizer=bert_tokenizer,
+        amax_words=args.amax_words,
     )
     logging.info(f"Length of Answer Vocabulary: {len(a2id)}")
 
@@ -234,25 +260,25 @@ logging.info(
 # Dataloaders
 features = torch.load(args.features_path)
 test_dataset = VideoQADataset(
-        csv_path=args.test_csv_path,
-        features=features,
-        qmax_words=args.qmax_words,
-        bert_tokenizer=bert_tokenizer,
-        a2id=a2id,
-        ivqa=(args.dataset == "ivqa"),
-        max_feats=args.max_feats,
-        id2a=id2a,
-        mc=args.mc
-        )
+    csv_path=args.test_csv_path,
+    features=features,
+    qmax_words=args.qmax_words,
+    bert_tokenizer=bert_tokenizer,
+    a2id=a2id,
+    ivqa=(args.dataset == "ivqa"),
+    max_feats=args.max_feats,
+    id2a=id2a,
+    mc=args.mc,
+)
 
 test_loader = DataLoader(
-        test_dataset,
-        batch_size=torch.cuda.device_count(),
-        num_workers=args.num_thread_reader,
-        shuffle=False,
-        drop_last=False,
-        collate_fn=videoqa_collate_fn
-    )
+    test_dataset,
+    batch_size=torch.cuda.device_count(),
+    num_workers=args.num_thread_reader,
+    shuffle=False,
+    drop_last=False,
+    collate_fn=videoqa_collate_fn,
+)
 
 logging.info("number of test instances: {}".format(len(test_loader.dataset)))
 

@@ -5,20 +5,29 @@ import json
 import collections
 import numpy as np
 
-def tokenize(seq, tokenizer, add_special_tokens=True, max_length=10, dynamic_padding=True, truncation=True):
+
+def tokenize(
+    seq,
+    tokenizer,
+    add_special_tokens=True,
+    max_length=10,
+    dynamic_padding=True,
+    truncation=True,
+):
     """
     :param seq: sequence of sequences of text
     :param tokenizer: bert_tokenizer
     :return: torch tensor padded up to length max_length of bert tokens
     """
     tokens = tokenizer.batch_encode_plus(
-            seq,
-            add_special_tokens=add_special_tokens,
-            max_length=max_length,
-            padding="longest" if dynamic_padding else "max_length",
-            truncation=truncation,
-        )['input_ids']
+        seq,
+        add_special_tokens=add_special_tokens,
+        max_length=max_length,
+        padding="longest" if dynamic_padding else "max_length",
+        truncation=truncation,
+    )["input_ids"]
     return torch.tensor(tokens, dtype=torch.long)
+
 
 def compute_aggreeings(topk, answers, thresholds, names, metrics, ivqa=False):
     """ Updates metrics dictionary by computing aggreeings for different thresholds """
@@ -66,8 +75,14 @@ def compute_a2v(vocab_path, bert_tokenizer, amax_words):
     """ Precomputes GloVe answer embeddings for all answers in the vocabulary """
     a2id = json.load(open(vocab_path, "r"))
     id2a = {v: k for k, v in a2id.items()}
-    a2v = tokenize(list(a2id.keys()), bert_tokenizer, add_special_tokens=True, max_length=amax_words,
-                       dynamic_padding=True, truncation=True)
+    a2v = tokenize(
+        list(a2id.keys()),
+        bert_tokenizer,
+        add_special_tokens=True,
+        max_length=amax_words,
+        dynamic_padding=True,
+        truncation=True,
+    )
     if torch.cuda.is_available():
         a2v = a2v.cuda()  # (vocabulary_size, 1, we_dim)
     return a2id, id2a, a2v
@@ -219,6 +234,7 @@ def compute_word_stats(
             counts[word] += (ans_word == 1).sum().item()
     return metrics, counts
 
+
 def compute_metrics(x):
     sx = np.sort(-x, axis=1)
     d = np.diag(-x)
@@ -227,16 +243,18 @@ def compute_metrics(x):
     ind = np.where(ind == 0)
     ind = ind[1]
     metrics = {}
-    metrics['R1'] = float(np.sum(ind == 0)) / len(ind)
-    metrics['R10'] = float(np.sum(ind < 10)) / len(ind)
-    metrics['R100'] = float(np.sum(ind < 100)) / len(ind)
-    metrics['MR'] = np.median(ind) + 1
+    metrics["R1"] = float(np.sum(ind == 0)) / len(ind)
+    metrics["R10"] = float(np.sum(ind < 10)) / len(ind)
+    metrics["R100"] = float(np.sum(ind < 100)) / len(ind)
+    metrics["MR"] = np.median(ind) + 1
     return metrics
 
 
 def print_computed_metrics(metrics):
-    r1 = metrics['R1']
-    r10 = metrics['R10']
-    r100 = metrics['R100']
-    mr = metrics['MR']
-    return('R@1: {:.4f} - R@10: {:.4f} - R@100: {:.4f} - Median R: {}'.format(r1, r10, r100, mr))
+    r1 = metrics["R1"]
+    r10 = metrics["R10"]
+    r100 = metrics["R100"]
+    mr = metrics["MR"]
+    return "R@1: {:.4f} - R@10: {:.4f} - R@100: {:.4f} - Median R: {}".format(
+        r1, r10, r100, mr
+    )

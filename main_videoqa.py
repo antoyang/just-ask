@@ -37,7 +37,9 @@ bert_tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-uncased")
 a2id, id2a, a2v = None, None, None
 if not args.mc:
     a2id, id2a, a2v = compute_a2v(
-        vocab_path=args.vocab_path, bert_tokenizer=bert_tokenizer, amax_words=args.amax_words
+        vocab_path=args.vocab_path,
+        bert_tokenizer=bert_tokenizer,
+        amax_words=args.amax_words,
     )
     logging.info(f"Length of Answer Vocabulary: {len(a2id)}")
 
@@ -74,9 +76,7 @@ features = torch.load(args.features_path)
     val_loader,
     test_dataset,
     test_loader,
-) = get_videoqa_loaders(
-    args, features, a2id, bert_tokenizer
-)
+) = get_videoqa_loaders(args, features, a2id, bert_tokenizer)
 
 logging.info("number of train instances: {}".format(len(train_loader.dataset)))
 logging.info("number of val instances: {}".format(len(val_loader.dataset)))
@@ -103,7 +103,7 @@ if not args.test:
         f"Set cosine schedule with {len(train_loader) * args.epochs} iterations"
     )
 
-    eval(model, test_loader, a2v, args, test=True) # zero-shot VideoQA
+    eval(model, test_loader, a2v, args, test=True)  # zero-shot VideoQA
     best_val_acc = -float("inf")
     best_epoch = 0
     for epoch in range(args.epochs):

@@ -17,7 +17,7 @@ class VideoQADataset(Dataset):
         a2id=None,
         ivqa=False,
         max_feats=20,
-        mc=0
+        mc=0,
     ):
         """
         :param csv_path: path to a csv containing columns video_id, question, answer
@@ -74,12 +74,20 @@ class VideoQADataset(Dataset):
             for x in answer_txt:
                 if x in self.a2id:
                     answer_id[self.a2id[x]] = answer_txt[x]
-            answer_txt = ", ".join([str(x) + "(" + str(answer_txt[x]) + ")" for x in answer_txt])
+            answer_txt = ", ".join(
+                [str(x) + "(" + str(answer_txt[x]) + ")" for x in answer_txt]
+            )
         elif self.mc:
             answer_id = int(self.data["answer"][index])
             answer_txt = [self.data["a" + str(i + 1)][index] for i in range(self.mc)]
-            answer = tokenize(answer_txt, self.bert_tokenizer, add_special_tokens=True, max_length=self.amax_words,
-                               dynamic_padding=True, truncation=True)
+            answer = tokenize(
+                answer_txt,
+                self.bert_tokenizer,
+                add_special_tokens=True,
+                max_length=self.amax_words,
+                dynamic_padding=True,
+                truncation=True,
+            )
         else:
             answer_txt = self.data["answer"].values[index]
             answer_id = self.a2id.get(
@@ -111,6 +119,7 @@ class VideoQADataset(Dataset):
             "answer_txt": answer_txt,
             "answer": answer,
         }
+
 
 def videoqa_collate_fn(batch):
     """
@@ -159,7 +168,7 @@ def get_videoqa_loaders(args, features, a2id, bert_tokenizer):
         a2id=a2id,
         ivqa=(args.dataset == "ivqa"),
         max_feats=args.max_feats,
-        mc=args.mc
+        mc=args.mc,
     )
 
     train_loader = DataLoader(
@@ -168,7 +177,7 @@ def get_videoqa_loaders(args, features, a2id, bert_tokenizer):
         num_workers=args.num_thread_reader,
         shuffle=True,
         drop_last=True,
-        collate_fn=videoqa_collate_fn
+        collate_fn=videoqa_collate_fn,
     )
 
     test_dataset = VideoQADataset(
@@ -180,7 +189,7 @@ def get_videoqa_loaders(args, features, a2id, bert_tokenizer):
         a2id=a2id,
         ivqa=(args.dataset == "ivqa"),
         max_feats=args.max_feats,
-        mc=args.mc
+        mc=args.mc,
     )
 
     test_loader = DataLoader(
@@ -189,28 +198,28 @@ def get_videoqa_loaders(args, features, a2id, bert_tokenizer):
         num_workers=args.num_thread_reader,
         shuffle=False,
         drop_last=False,
-        collate_fn=videoqa_collate_fn
+        collate_fn=videoqa_collate_fn,
     )
 
     val_dataset = VideoQADataset(
-            csv_path=args.val_csv_path,
-            features=features,
-            qmax_words=args.qmax_words,
-            amax_words=args.amax_words,
-            bert_tokenizer=bert_tokenizer,
-            a2id=a2id,
-            ivqa=(args.dataset == "ivqa"),
-            max_feats=args.max_feats,
-            mc=args.mc
+        csv_path=args.val_csv_path,
+        features=features,
+        qmax_words=args.qmax_words,
+        amax_words=args.amax_words,
+        bert_tokenizer=bert_tokenizer,
+        a2id=a2id,
+        ivqa=(args.dataset == "ivqa"),
+        max_feats=args.max_feats,
+        mc=args.mc,
     )
 
     val_loader = DataLoader(
-            val_dataset,
-            batch_size=args.batch_size_val,
-            num_workers=args.num_thread_reader,
-            shuffle=False,
-            collate_fn=videoqa_collate_fn
-        )
+        val_dataset,
+        batch_size=args.batch_size_val,
+        num_workers=args.num_thread_reader,
+        shuffle=False,
+        collate_fn=videoqa_collate_fn,
+    )
     return (
         train_dataset,
         train_loader,
