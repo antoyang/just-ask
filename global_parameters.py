@@ -1,18 +1,10 @@
 import os
 
 # Fill the paths
-DEFAULT_DATASET_DIR = (
-    "/gpfsstore/rech/msk/urt22vb/cvpr21/datasets/"  # where the datasets folders are
-)
-# DEFAULT_DATASET_DIR = "/sequoia/data2/ayang/cvpr21/datasets/" # where the datasets folders are
-# DEFAULT_DATASET_DIR = "/home/ROCQ/willow/ayang/data/" # where the pretrained models are
-DEFAULT_CKPT_DIR = "/gpfsstore/rech/msk/urt22vb/cvpr21/checkpoints/"  # where the training checkpoints and logs will be saved
-DEFAULT_MODEL_DIR = (
-    "/gpfsstore/rech/msk/urt22vb/cvpr21/models/"  # where the pretrained models are
-)
-# DEFAULT_MODEL_DIR = "/sequoia/data2/ayang/cvpr21/models/"  # where the pretrained models are
-# DEFAULT_MODEL_DIR = "/home/ROCQ/willow/ayang/models/" # where the pretrained models are
-SSD_DIR = "/gpfsscratch/rech/msk/urt22vb/"  # where the HowTo100M S3D features are
+DEFAULT_DATASET_DIR = ""  # where the datasets folders are
+DEFAULT_CKPT_DIR = ""   # where the training checkpoints and logs will be saved
+DEFAULT_MODEL_DIR = ""  # where the pretrained models are
+SSD_DIR = ""  # where the HowTo100M S3D features are
 
 # Map from dataset name to folder name
 dataset2folder = {
@@ -58,26 +50,18 @@ S3D_DICT_PATH = os.path.join(
 PUNCTUATOR_PATH = os.path.join(
     DEFAULT_MODEL_DIR, "INTERSPEECH-T-BRNN.pcl"
 )  # Path to Punctuator2 checkpoint
-TRANSFORMERS_PATH = "/gpfswork/rech/msk/urt22vb/transformers"
-# os.path.join(
-# DEFAULT_MODEL_DIR, "transformers"
-# )  # Path where the transformers checkpoints will be saved
+TRANSFORMERS_PATH = os.path.join(
+    DEFAULT_MODEL_DIR, "transformers"
+)  # Path where the transformers checkpoints will be saved
 
 # Question-answer Generation
 punct_dir = os.path.join(
     SSD_DIR, "punct"
 )  # Path where the punctuated clips will be created (1 file per unique video)
-QG_REPO_DIR = (
-    "/gpfswork/rech/msk/urt22vb"  # Path where the question generation repo is cloned
-)
+QG_REPO_DIR = ""  # Path where the question generation repo is cloned
 answers_dir = os.path.join(
     SSD_DIR, "ans"
 )  # Path where the extracted answers will be saved (1 file per unique video)
 qas_dir = os.path.join(
     SSD_DIR, "qas"
 )  # Path where the generated question-answers will be saved (1 file per unique video)
-
-SERVER_HTML_PATH = "/home/ROCQ/willow/ayang/videoqa/vqa_server.html"
-# "/sequoia/data1/ayang/cvpr21/server_videoqa.html"
-SERVER_FEATURE_PATH = "/home/ROCQ/willow/ayang/data"
-# "/sequoia/data2/ayang/cvpr21/datasets/"
