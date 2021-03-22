@@ -1,2 +1,0 @@
-#!/bin/bash
-python /home/ROCQ/willow/ayang/JustAsk/server_videoqa.py --dataset ivqa --pretrain_path /home/ROCQ/willow/ayang/checkpoints/justask_ptsqa.pth --pretrain_path2 /home/ROCQ/willow/ayang/checkpoints/justask_ivqa.pth --port 80
