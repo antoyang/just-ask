@@ -1,10 +1,8 @@
 import os
 import pickle
 from tqdm import tqdm
-import sys
 
-sys.path.insert(0, os.getcwd())
-from global_parameters import answers_dir, HOWTO_PATH
+from global_parameters import answers_dir, HOWTO_PATH, HOWTOVQA_PATH
 
 files = os.listdir(answers_dir)
 
@@ -17,7 +15,7 @@ videos = pickle.load(
     )
 )
 
-sqa = {}
+howtovqa = {}
 for file in tqdm(files):
     if os.path.exists(os.path.join(answers_dir, file)):
         # Load extracted answers
@@ -37,7 +35,7 @@ for file in tqdm(files):
             answers_idx.extend([i] * len(ans))
 
     if answers_txt:
-        sqa[video_id] = {"answer": answers_txt, "idx": answers_idx}
+        howtovqa[video_id] = {"answer": answers_txt, "idx": answers_idx}
 
-with open(os.path.join(HOWTO_PATH, "sqa_answers.pickle"), "wb") as f:
-    pickle.dump(sqa, f)
+with open(os.path.join(HOWTOVQA_PATH, "howtovqa_answers.pickle"), "wb") as f:
+    pickle.dump(howtovqa, f)

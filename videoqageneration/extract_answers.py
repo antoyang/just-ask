@@ -8,7 +8,6 @@ import math
 import torch
 import sys
 
-sys.path.insert(0, os.getcwd())
 from global_parameters import answers_dir, QG_REPO_DIR, HOWTO_PATH, TRANSFORMERS_PATH
 
 sys.path.insert(0, os.path.join(QG_REPO_DIR, "question_generation"))
@@ -145,6 +144,7 @@ for i, batch in tqdm(enumerate(dataloader)):
     answers = [
         list(set([y.strip() for y in x if len(y.strip())])) for x in answers
     ]  # remove duplicates
+    answers = [[x for x in y if x in text[l] or x.capitalize() in text[l]] for l, y in enumerate(answers)] # remove answers that we cannot find back in the original sentence
 
     # Save
     if os.path.exists(os.path.join(answers_dir, video_id + ".pkl")):

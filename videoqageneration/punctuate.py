@@ -5,9 +5,7 @@ from tqdm import tqdm
 import string
 import numpy as np
 from punctuator import Punctuator
-import sys
 
-sys.path.insert(0, os.getcwd())
 from global_parameters import PUNCTUATOR_PATH, HOWTO_PATH, punct_dir
 
 # Load BRNN Punctuator Model

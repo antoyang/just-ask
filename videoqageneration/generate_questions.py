@@ -6,9 +6,7 @@ import torch
 import math
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import argparse
-import sys
 
-sys.path.insert(0, os.getcwd())
 from global_parameters import TRANSFORMERS_PATH, qas_dir, HOWTO_PATH
 
 
@@ -23,7 +21,10 @@ class Question_Generation_Dataset(Dataset):
         # prepare inputs for answer-aware question generation
         inputs = []
         for (sent, a) in zip(text, answers):
-            start = sent.index(a)
+            try:
+                start = sent.index(a)
+            except ValueError: # substring not found
+                start = text.index(a.capitalize())
             text_hl = f"{sent[:start]} <hl> {a} <hl> {sent[start + len(a):]}"
             input = f"generate question: {text_hl}"
             inputs.append(input)
@@ -91,7 +92,7 @@ videos = pickle.load(
 )
 ext_answers = pickle.load(
     open(
-        os.path.join(HOWTO_PATH, "sqa_answers.pickle"),
+        os.path.join(HOWTO_PATH, "howtovqa_answers.pickle"),
         "rb",
     )
 )
