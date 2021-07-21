@@ -20,7 +20,7 @@ def get_vocabulary(train_df, save=False):
     )
     most_common = train_counter.most_common()
     vocab = {}
-    for i, x in enumerate(most_common):  # 2348 answers present twice
+    for i, x in enumerate(most_common):  # 2349 answers present twice
         if x[1] >= 2:
             vocab[x[0]] = i
         else:

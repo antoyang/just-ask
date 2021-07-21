@@ -2,9 +2,8 @@ import json
 import os
 import collections
 import pandas as pd
-import torch
 
-from global_parameters import ACT_PATH, ACT_FEATURES_PATH
+from global_parameters import ACT_PATH
 
 os.chdir(ACT_PATH)
 
@@ -22,10 +21,9 @@ def get_vocabulary(train_a, save=False):
     train_counter = collections.Counter(ans)
     most_common = train_counter.most_common()
     vocab = {}
-    vocab["<UNK>"] = 0
     for i, x in enumerate(most_common):  # 1654 answers present twice
         if x[1] >= 2:
-            vocab[x[0]] = i + 1
+            vocab[x[0]] = i
         else:
             break
     print(len(vocab))
@@ -57,7 +55,6 @@ def json_to_df(vocab, train_q, train_a, val_q, val_a, test_q, test_a, save=False
     train_df = train_df[
         train_df["answer"].isin(vocab)
     ]  # do not use train samples of which the answer is not in the vocab
-    print(len(train_df))
     val_df = pd.DataFrame(
         {
             "question": [x["question"] for x in val_q],
@@ -77,13 +74,6 @@ def json_to_df(vocab, train_q, train_a, val_q, val_a, test_q, test_a, save=False
         columns=["question", "answer", "video_id", "type"],
     )
 
-    # Remove 1% videos deleted from YouTube that could not be feature extracted
-    features = torch.load(ACT_FEATURES_PATH)
-    extracted = set(features.keys())
-    print(len(train_df), len(val_df), len(test_df))
-    train_df = train_df[train_df["video_id"].isin(extracted)]
-    val_df = val_df[val_df["video_id"].isin(extracted)]
-    test_df = test_df[test_df["video_id"].isin(extracted)]
     print(len(train_df), len(val_df), len(test_df))
 
     if save:

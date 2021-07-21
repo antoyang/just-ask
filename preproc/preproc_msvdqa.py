@@ -17,9 +17,8 @@ def get_vocabulary(train_json, save=False):
     train_counter = collections.Counter([x["answer"] for x in train_json])
     most_common = train_counter.most_common(4000)  # 1852
     vocab = {}
-    vocab["<UNK>"] = 0
     for i, x in enumerate(most_common):
-        vocab[x[0]] = i + 1
+        vocab[x[0]] = i
     print(len(vocab))
     if save:
         with open("vocab.json", "w") as outfile:
@@ -50,7 +49,6 @@ def json_to_df(vocab, train_json, val_json, test_json, save=False):
     train_df = train_df[
         train_df["answer"].isin(vocab)
     ]  # do not use train samples of which the answer is not in the vocab
-    print(len(train_df))
     val_df = pd.DataFrame(
         {
             "question": [x["question"] for x in val_json],
@@ -73,6 +71,8 @@ def json_to_df(vocab, train_json, val_json, test_json, save=False):
     train_df["type"] = [get_type(x) for x in train_df["question"]]
     val_df["type"] = [get_type(x) for x in val_df["question"]]
     test_df["type"] = [get_type(x) for x in test_df["question"]]
+
+    print(len(train_df), len(val_df), len(test_df))
 
     if save:
         train_df.to_csv("train.csv", index=False)

@@ -19,7 +19,7 @@ videos = pickle.load(
 ids = set(videos.keys())
 howto100m_csv = pd.read_csv(os.path.join(HOWTO_PATH, "s3d_features.csv"))
 
-# Intersection with IVQA (all)
+# Intersection with iVQA (all)
 ivqa_train_csv = pd.read_csv(os.path.join(IVQA_PATH, "train.csv"))
 ivqa_val_csv = pd.read_csv(os.path.join(IVQA_PATH, "val.csv"))
 ivqa_test_csv = pd.read_csv(os.path.join(IVQA_PATH, "test.csv"))
