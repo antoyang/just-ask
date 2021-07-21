@@ -20,10 +20,9 @@ def get_args():
             "ivqa",
             "msrvtt",
             "msvd",
-            "tgif",
             "activitynet",
             "howto100m",
-            "sqa",
+            "howtovqa",
             "how2qa",
         ],
     )
@@ -175,6 +174,10 @@ def get_args():
         "--question_example", type=str, default="", help="demo question text"
     )
     parser.add_argument("--video_example", type=str, default="", help="demo video path")
+    parser.add_argument("--port", type=int, default=8899, help="demo port")
+    parser.add_argument(
+        "--pretrain_path2", type=str, default="", help="second demo model"
+    )
 
     args = parser.parse_args()
 
@@ -193,7 +196,7 @@ def get_args():
     load_path = os.path.join(args.dataset_dir, dataset2folder[args.dataset])
     args.load_path = load_path
 
-    if args.dataset not in ["howto100m", "sqa"]:  # VideoQA dataset
+    if args.dataset not in ["howto100m", "howtovqa"]:  # VideoQA dataset
         args.features_path = os.path.join(load_path, f"s3d.pth")
         args.train_csv_path = os.path.join(load_path, "train.csv")
         args.val_csv_path = os.path.join(load_path, "val.csv")
@@ -219,18 +222,18 @@ def get_args():
             args.msrvtt_test_features_path = os.path.join(
                 args.dataset_dir, "MSR-VTT", "msrvtt_test_unpooled_s3d_features.pth"
             )
-        elif args.dataset == "sqa":
+        elif args.dataset == "howtovqa":
             if not args.subset:
-                args.caption_path = os.path.join(load_path, "sqa.pkl")
-                args.train_csv_path = os.path.join(load_path, "train_sqa.csv")
-                args.val_csv_path = os.path.join(load_path, "val_sqa.csv")
+                args.caption_path = os.path.join(load_path, "howtovqa.pkl")
+                args.train_csv_path = os.path.join(load_path, "train_howtovqa.csv")
+                args.val_csv_path = os.path.join(load_path, "val_howtovqa.csv")
             else:
-                args.caption_path = os.path.join(load_path, f"sqa_{args.subset}.pickle")
+                args.caption_path = os.path.join(load_path, f"howtovqa_{args.subset}.pickle")
                 args.train_csv_path = os.path.join(
-                    load_path, f"train_sqa_{args.subset}.csv"
+                    load_path, f"train_howtovqa_{args.subset}.csv"
                 )
                 args.val_csv_path = os.path.join(
-                    load_path, f"val_sqa_{args.subset}.csv"
+                    load_path, f"val_howtovqa_{args.subset}.csv"
                 )
 
     return args

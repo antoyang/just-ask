@@ -63,6 +63,7 @@ logging.info("Using {} GPUs".format(torch.cuda.device_count()))
 model = nn.DataParallel(model)
 if args.pretrain_path != "":
     model.load_state_dict(torch.load(args.pretrain_path))
+    logging.info(f"Loaded checkpoint {args.pretrain_path}")
 logging.info(
     f"Nb of trainable params:{sum(p.numel() for p in model.parameters() if p.requires_grad)}"
 )

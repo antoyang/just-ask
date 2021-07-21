@@ -1,7 +1,11 @@
-torch==1.6.0
-pandas==1.1.1
+CherryPy==18.6.0
+torch==1.9.0
+transformers==3.2.0
 numpy==1.19.1
-transformers==3.1.0
-tqdm==4.42.1
 punctuator==0.9.6
-scikit-learn~=0.23.2
+tqdm==4.42.1
+ffmpeg_python==0.2.0
+pandas==1.1.1
+ffmpeg==1.4
+pipelines==0.0.14
+scikit_learn==0.24.2
