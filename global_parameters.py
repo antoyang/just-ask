@@ -5,6 +5,7 @@ DEFAULT_DATASET_DIR = ""  # where the datasets folders are
 DEFAULT_CKPT_DIR = ""   # where the training checkpoints and logs will be saved
 DEFAULT_MODEL_DIR = ""  # where the pretrained models are
 SSD_DIR = ""  # where the HowTo100M S3D features are
+HOWTO_FEATURES_PATH = os.path.join(SSD_DIR, "s3d_features", "howto100m_s3d_features")
 
 # Map from dataset name to folder name
 dataset2folder = {
@@ -13,7 +14,7 @@ dataset2folder = {
     "msvd": "MSVD-QA",
     "activitynet": "ActivityNet-QA",
     "howto100m": "HowTo100M",
-    "sqa": "HowTo100M",
+    "howtovqa": "HowToVQA69M",
     "how2qa": "How2QA",
 }
 
@@ -30,12 +31,12 @@ MSVD_PATH = os.path.join(
 ACT_PATH = os.path.join(
     DEFAULT_DATASET_DIR, dataset2folder["activitynet"]
 )  # Path where ActivityNet-QA is downloaded
-ACT_FEATURES_PATH = os.path.join(
-    ACT_PATH, "s3d.pth"
-)  # Path to ActivityNet features file
 HOWTO_PATH = os.path.join(
     DEFAULT_DATASET_DIR, dataset2folder["howto100m"]
 )  # Path where HowTo100M is downloaded
+HOWTOVQA_PATH = os.path.join(
+    DEFAULT_DATASET_DIR, dataset2folder["howtovqa"]
+)  # Path where HowToVQA69M is downloaded / generated
 HOW2QA_PATH = os.path.join(
     DEFAULT_DATASET_DIR, dataset2folder["how2qa"]
 )  # Path where How2QA is downloaded
