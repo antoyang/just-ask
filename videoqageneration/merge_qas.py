@@ -24,6 +24,8 @@ with open(os.path.join(HOWTOVQA_PATH, "howtovqa.pkl"), "wb") as f:
 vids = set(howtovqa.keys())
 howto_csv = pd.read_csv(os.path.join(HOWTO_PATH, "s3d_features_nointersec.csv"))
 howtovqa_csv = howto_csv[howto_csv["video_id"].isin(vids)]
-train_howtovqa, val_howtovqa = train_test_split(howtovqa_csv, test_size=0.1, random_state=0)
+train_howtovqa, val_howtovqa = train_test_split(
+    howtovqa_csv, test_size=0.1, random_state=0
+)
 train_howtovqa.to_csv(os.path.join(HOWTOVQA_PATH, "train_howtovqa.csv"), index=False)
 val_howtovqa.to_csv(os.path.join(HOWTOVQA_PATH, "val_howtovqa.csv"), index=False)
