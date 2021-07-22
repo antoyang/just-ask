@@ -1,9 +1,10 @@
 # Just Ask: Learning to Answer Questions from Millions of Narrated Videos
 
 This repository provides the code for our paper, including:
-- Raw data downloading instructions, including our released iVQA and HowToVQA69M datasets
-- Data preprocessing scripts and preprocessed data
-- Training scripts and pretrained checkpoints
+- Data downloading instructions, including our released iVQA and HowToVQA69M datasets
+- Data preprocessing and feature extraction scripts, as well as preprocessed data and features
+- VideoQA automatic generation pipeline
+- Training scripts and pretrained checkpoints, both for pretraining and downstream VideoQA datasets
 - Evaluation scripts
 
 More information can be found on the [project webpage](https://antoyang.github.io/just-ask.html).
@@ -36,10 +37,13 @@ bash download/download_howtovqa.sh <DEFAULT_DATASET_DIR>
 This requires having about 6Gb free in `DEFAULT_DATASET_DIR`. You will also need to download features for videos from HowTo100M from [the data providers](https://www.di.ens.fr/willow/research/howto100m/) in `HOWTO_FEATURES_PATH`.
 
 ## Long Start
-If you wish to reproduce the data preprocessing, video feature extraction or HowToVQA generation procedure.
+If you wish to reproduce the data preprocessing, video feature extraction or HowToVQA69M generation procedure.
 
 ### Download Raw Data
 The following folders should be created in `DEFAULT_DATASET_DIR`, and should also contain a `video` subfolder containing the videos downloaded from each dataset.
+
+**HowToVQA69M**: We provide the HowToVQA69M dataset at [this link](https://drive.google.com/drive/folders/1ZlpgjjcBnpTRgjwpW1z6x2PY513yhpWA?usp=sharing).
+The HowToVQA69M folder should contain `howtovqa.pkl`, `train_howtovqa.csv` and `val_howtovqa.csv`. 
 
 **iVQA**: We provide the iVQA dataset at [this link](https://drive.google.com/drive/folders/14e7hUcy4Ti25HdRRH5LUpuJTik2cjlzb?usp=sharing).
 The iVQA folder should contain `train.csv`, `val.csv` and `test.csv`.
@@ -60,8 +64,7 @@ The How2QA folder should contain `how2QA_train_release.csv` and `how2QA_val_rele
 
 **HowTo100M**: Download it from [the data providers](https://github.com/antoine77340/howto100m).
 The HowTo100M folder should contain `caption_howto100m_with_stopwords.pkl` and `s3d_features.csv`.
-Note that for the VQA-T pretraining on HowTo100M baseline, we also do zero-shot validation on YouCook2 and MSR-VTT video retrieval. We followed [MIL-NCE](https://github.com/antoine77340/MIL-NCE_HowTo100M) for the preprocessing of these datasets. You should have in the **YouCook2** folder a pickle file with processed data and features `youcook_unpooled_val.pkl`, and in the **MSR-VTT** folder a file of processed data `MSRVTT_JSFUSION_test.csv` and a file of features `msrvtt_test_unpooled_s3d_features.pth`. 
-
+Note that for the VQA-T pretraining on HowTo100M baseline, we also do zero-shot validation on YouCook2 and MSR-VTT video retrieval. We followed [MIL-NCE](https://github.com/antoine77340/MIL-NCE_HowTo100M) for the preprocessing of these datasets. You should have in the **YouCook2** folder a pickle file with processed data and features `youcook_unpooled_val.pkl`, and in the **MSR-VTT** folder a file of processed data `MSRVTT_JSFUSION_test.csv` and a file of features `msrvtt_test_unpooled_s3d_features.pth`.
 
 ### Data Preprocessing
 **VideoQA**: To process data for each VideoQA dataset, use:
@@ -191,6 +194,7 @@ python demo_videoqa.py --dataset <dataset> \
 --pretrain_path <CKPT_PATH> \ 
 --question_example <question> --video_example <video_path>
 ```
+Note that we also host an online demo at [this link](http://videoqa.paris.inria.fr/).
 
 ## Acknowledgements
 The video feature extraction code is inspired by [this repository](https://github.com/antoine77340/video_feature_extractor). The model implementation of our multi-modal transformer (as well as the masked language modeling setup) is inspired by [Hugging Face](https://huggingface.co/transformers/model_doc/distilbert.html). 
