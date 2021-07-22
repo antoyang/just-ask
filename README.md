@@ -97,7 +97,8 @@ python extract/extract.py --csv <csv_path>
 
 **Merging**: To merge the extracted features into a single file for each VideoQA dataset, use (for ActivityNet-QA that contains long videos, add `--pad 120`):
 ```
-python extract/merge_features.py --folder <features_path> --output_path <DEFAULT_DATASET_DIR>/s3d.pth --dataset <dataset>
+python extract/merge_features.py --folder <features_path> \
+--output_path <DEFAULT_DATASET_DIR>/s3d.pth --dataset <dataset>
 ```
 
 For HowTo100M, the features should be stored in `HOWTO_FEATURES_PATH`, one file per video. `SSD_PATH` should preferably on a SSD disk for optimized on-the-fly reading operation time during pretraining.
@@ -159,7 +160,7 @@ Note that the previous command runs a zero-shot video retrieval validation on Yo
 **Finetuning**: To finetune a pretrained model on a downstream VideoQA dataset (for MSRVTT-QA, which is the largest downstream dataset, it takes less than 4 hours on 4 NVIDIA Tesla V100), run:
 ```
 python main_videoqa.py --checkpoint_dir=ft<dataset> --dataset=<dataset> --lr=0.00001 \ 
---pretrain_path=<DEFAULT_CKPT_PREDIR>/pthowtovqa/e9.pth
+--pretrain_path=<CKPT_PATH>
 ```
 
 **Training from scratch**: VQA-T trained from scratch is simply obtained by running the previous script with no `pretrain_path` set.
@@ -183,18 +184,26 @@ python eval_videoqa_cm.py --checkpoint_dir=pthtmzeroshot<dataset> --dataset=<dat
 ### Detailed evaluation
 Using a trained checkpoint, to perform evaluation segmented per question type and answer quartile, use:
 ```
-python eval_videoqa.py --dataset <dataset> \ 
---pretrain_path <CKPT_PATH>
+python eval_videoqa.py --dataset <dataset> --pretrain_path <CKPT_PATH>
 ```
 
 ### VideoQA Demo 
 Using a trained checkpoint, you can also run a VideoQA example with a video file of your choice, and the question of your choice. For that, use (the dataset indicated here is only used for the definition of the answer vocabulary):
 ```
-python demo_videoqa.py --dataset <dataset> \ 
---pretrain_path <CKPT_PATH> \ 
+python demo_videoqa.py --dataset <dataset> --pretrain_path <CKPT_PATH> \ 
 --question_example <question> --video_example <video_path>
 ```
 Note that we also host an online demo at [this link](http://videoqa.paris.inria.fr/).
 
 ## Acknowledgements
 The video feature extraction code is inspired by [this repository](https://github.com/antoine77340/video_feature_extractor). The model implementation of our multi-modal transformer (as well as the masked language modeling setup) is inspired by [Hugging Face](https://huggingface.co/transformers/model_doc/distilbert.html). 
+
+## Citation 
+If you found this work useful, consider citing us:
+```
+@article{yang2020just,
+title={Just Ask: Learning to Answer Questions from Millions of Narrated Videos},
+author={Yang, Antoine and Miech, Antoine and Sivic, Josef and Laptev, Ivan and Schmid, Cordelia},
+journal={arXiv preprint arXiv:2012.00451},
+year={2020}}
+```
