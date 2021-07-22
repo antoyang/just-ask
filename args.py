@@ -228,7 +228,9 @@ def get_args():
                 args.train_csv_path = os.path.join(load_path, "train_howtovqa.csv")
                 args.val_csv_path = os.path.join(load_path, "val_howtovqa.csv")
             else:
-                args.caption_path = os.path.join(load_path, f"howtovqa_{args.subset}.pickle")
+                args.caption_path = os.path.join(
+                    load_path, f"howtovqa_{args.subset}.pickle"
+                )
                 args.train_csv_path = os.path.join(
                     load_path, f"train_howtovqa_{args.subset}.csv"
                 )
