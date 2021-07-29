@@ -522,8 +522,6 @@ class MMT_VideoQA(nn.Module):
                     ],
                     1,
                 )
-            mask = torch.cat([text_mask, video_mask], dim=1)
-            video_proj = self.get_video_embedding(video)
             text = self.bert(question)
             if text.shape[1] < self.Q:
                 text = torch.cat(
@@ -536,7 +534,24 @@ class MMT_VideoQA(nn.Module):
                     1,
                 )
             text_proj = self.get_question_embedding(text)
-            vq_cat = torch.cat([text_proj, video_proj], dim=1)
+            if not self.baseline == "qa":
+                mask = torch.cat([text_mask, video_mask], dim=1)
+                video_proj = self.get_video_embedding(video)
+                vq_cat = torch.cat([text_proj, video_proj], dim=1)
+            else:
+                mask = torch.cat(
+                    [text_mask, torch.zeros(text_proj.size(0), self.T).cuda()],
+                    dim=1,
+                )
+                vq_cat = torch.cat(
+                    [
+                        text_proj,
+                        torch.zeros(
+                            text_proj.size(0), self.T, text_proj.size(-1)
+                        ).cuda(),
+                    ],
+                    dim=1,
+                )
             vq = self.position(vq_cat)
             attended_vq = self.mmt(x=vq, attn_mask=mask)[0]
             prediction_logits = self.vocab_transform(attended_vq[:, : self.Q, :])
