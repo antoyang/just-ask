@@ -1,0 +1,413 @@
+<!-- You must include this JavaScript file -->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+
+<!-- For the full list of available Crowd HTML Elements and their input/output documentation,
+      please refer to https://docs.aws.amazon.com/sagemaker/latest/dg/sms-ui-template-reference.html -->
+
+<!-- You must include crowd-form so that your task submits answers to MTurk -->
+<crowd-form answer-format="flatten-objects">
+    <h2>Instructions: </h2>
+    <ul>
+    <li> Watch the video excerpt and <b><span style="color:blue"> ask a question about its visual content. </span></b></li>
+    <li> Someone that watched the video's visual content should be able to answer the question.
+        But someone that did not watch it <b><span style="color:red"> shouldn't be able to guess the right answer.</span></b> </li>
+        <ul>
+            <li>&#x274C; "What did the man use for blending ?" "Blender" (easy to guess) </li>
+            <li>&#x274C; "What is the chef wearing over her shirt ?" "Apron" (easy to guess) </li>
+        </ul>
+        <li> You should be thinking of a <b><span style="color:red"> new question each time specific to the video</span></b> and avoid asking generic questions too often.
+        <ul>
+            <li>&#x274C; "What is it ?" (too generic) </li>
+            <li>&#x2705; "What is on the table at the end of the video ?" (specific) </li>
+        </ul></li>
+    <li> The answer type must be an <b><span style="color:blue"> object, a living being or a place </span></b> (<b><span style="color:red">not a proper noun, nor a verb, nor an adjective, nor an adverb, nor a number, nor yes, nor no</span></b>). For instance: </li>
+        <ul>
+            <li>&#x274C; "It is" (paraphrase of yes) </li>
+            <li>&#x2705; "Table" (object) </li>
+            <li>&#x2705; "Bear" (living being) </li>
+            <li>&#x2705; "Living room" (place) </li>
+        </ul>
+        <li> Provide a <b><span style="color:blue"> precise and brief answer (typically 1 to 3 words) that should be how most people would answer that question </span></b>. For instance: </li>
+        <ul><li><span style="color:red"> "In the bedroom." </span> (too long) &rarr; <span style="color:green"> "Bedroom" </span></li>
+            <li><span style="color:red"> "She is making pancakes" </span> (too long) &rarr; <span style="color:green"> "Pancakes" </span></li>
+            <li><span style="color:red"> "Orange balloon" </span> (too long) &rarr; <span style="color:green"> "Balloon" </span></li>
+        </ul>
+    <li> If you do not find any object, any living being or any place that you could ask question on in the video, please check the <b><span style="color:blue"> corresponding button </span></b> and provide a free-type question. </li>
+    <li> You can find a set of illustrated good and bad examples in the detailed instructions. </li>
+
+    </ul>
+
+    <crowd-instructions link-text="View instructions" link-type="button">
+        <short-summary>
+            <p>Ask a question about the visual content of the video.</p>
+        </short-summary>
+
+        <detailed-instructions>
+            <p>
+              <ul>
+                <li>     Do not ask questions of which the answer can be <span style="color:red"> yes, no or a number</span>. Follow the answer type that you are asked.
+                </li>
+                <li>     A human that <span style="color:red"> did not watch the video's visual content </span> should not be able to answer the question.
+                </li>
+                <li>     Do not ask questions that require <span style="color:red">knowledge of the audio track of the video, reading text on the video, or knowledge external to the video</span>.
+                </li>
+                <li>     Do not repeat questions. Do not ask <span style="color:red"> generic questions </span> or the same questions with minor variations over and over accross videos.
+                Think of a new question each time <span style="color:green"> specific to the video</span>.
+                </li>
+                <li>     Each question must be a <span style="color:green"> single question</span>. Do not ask questions that have multiple parts or multiple subquestions in them.
+                </li>
+                <li>     The answer should be a <span style="color:green"> precise but brief phrase (using as few words as possible)</span>, not a sentence. <span style="color:red"> In the bedroom. </span> is not a valid answer; <span style="color:green"> Bedroom </span> is a valid answer. The answer should be how most people would answer the question.
+                </li>
+                <li>     Respond <span style="color:green"> matter-of-factly </span> and avoid using conversational language or inserting your opinion.
+                </li>
+                <li>     Write with <span style="color:green"> correct grammar </span> and avoid typographical errors.
+                </li>
+              </ul>
+            </p>
+        </detailed-instructions>
+
+        <positive-example>
+          <div style="display: flex;">
+            <div style='width: 400px;'>
+            <h3>Video</h3>
+            <video height="250" width="350" controls="controls" preload="metadata" muted><source  src="exemples/video7138.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+
+            <h3>Question</h3>
+            <p>What is behind the man when he is talking? </p>
+            <h3>Answer</h3>
+            <p>Wall</p>
+
+        </positive-example>
+
+        <positive-example>
+          <div style="display: flex;">
+            <div style='width: 400px;'>
+            <h3>Video</h3>
+            <video height="250" width="350" controls="controls" preload="metadata" muted><source  src="exemples/video7138.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+
+            <h3>Question</h3>
+            <p>Where does the man get out from ? </p>
+            <h3>Answer</h3>
+            <p>Car</p>
+
+        </positive-example>
+
+        <positive-example>
+          <div style="display: flex;">
+            <div style='width: 400px;'>
+            <h3>Video</h3>
+            <video height="250" width="350" controls="controls" preload="metadata" muted><source  src="exemples/video8535.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+
+            <h3>Question</h3>
+            <p>What is the man wearing on his head ? </p>
+            <h3>Answer</h3>
+            <p>Helmet</p>
+
+        </positive-example>
+
+        <positive-example>
+          <div style="display: flex;">
+            <div style='width: 400px;'>
+            <h3>Video</h3>
+            <video height="250" width="350" controls="controls" preload="metadata" muted><source  src="exemples/video8535.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+
+            <h3>Question</h3>
+            <p>What is the man driving? </p>
+            <h3>Answer</h3>
+            <p>Motorcycle</p>
+
+        </positive-example>
+
+        <positive-example>
+          <div style="display: flex;">
+            <div style='width: 400px;'>
+            <h3>Video</h3>
+            <video height="250" width="350" controls="controls" preload="metadata" muted><source  src="exemples/video9618.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+
+            <h3>Question</h3>
+            <p>What is the woman holding in her hand as she seems reflecting ? </p>
+            <h3>Answer</h3>
+            <p>Mobile Phone</p>
+
+        </positive-example>
+
+        <positive-example>
+          <div style="display: flex;">
+            <div style='width: 400px;'>
+            <h3>Video</h3>
+            <video height="250" width="350" controls="controls" preload="metadata" muted><source  src="iVQA_videos/gU4-15o9j5Q_633_643.webm" type="video/webm"></video>
+            </div>
+          </div>
+
+            <h3>Question</h3>
+            <p>What does she wear on her hands?</p>
+            <h3>Answer</h3>
+            <p>Surgical gloves</p>
+
+        </positive-example>
+
+        <positive-example>
+          <div style="display: flex;">
+            <div style='width: 400px;'>
+            <h3>Video</h3>
+            <video height="250" width="350" controls="controls" preload="metadata" muted><source  src="iVQA_videos/uiLr9bdOL0M_23_30.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+
+            <h3>Question</h3>
+            <p>Who moves the red glass ? </p>
+            <h3>Answer</h3>
+            <p>Grey parrot</p>
+
+        </positive-example>
+
+        <positive-example>
+          <div style="display: flex;">
+            <div style='width: 400px;'>
+            <h3>Video</h3>
+            <video height="250" width="350" controls="controls" preload="metadata" muted><source  src="exemples/video7490.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+
+            <h3>Question</h3>
+            <p>Where are the men playing on ? </p>
+            <h3>Answer</h3>
+            <p>Basketball Field</p>
+
+        </positive-example>
+
+        <positive-example>
+          <div style="display: flex;">
+            <div style='width: 400px;'>
+            <h3>Video</h3>
+            <video height="250" width="350" controls="controls" preload="metadata" muted><source  src="iVQA_videos/A4QERRsfVPc_363_372.webm" type="video/webm"></video>
+            </div>
+          </div>
+
+            <h3>Question</h3>
+            <p>What is on top of the glass jar ? </p>
+            <h3>Answer</h3>
+            <p>Whipped cream</p>
+
+        </positive-example>
+
+        <negative-example>
+          <div style="display: flex;">
+            <div style='width: 400px;'>
+            <h3>Video</h3>
+            <video height="250" width="350" controls="controls" preload="metadata" muted><source  src="exemples/video7138.mp4" type="video/mp4"></video>
+            </div>
+
+          </div>
+
+            <h3>Question</h3>
+            <p>Does the man get into a car? </p>
+
+            <h3>Why is it wrong?</h3>
+            <p>The answer to such a question would be yes or no. You are asked to avoid questions for which the answer is yes, no or a number.</p>
+
+        </negative-example>
+
+        <negative-example>
+          <div style="display: flex;">
+            <div style='width: 400px;'>
+            <h3>Video</h3>
+            <video height="250" width="350" controls="controls" preload="metadata" muted><source  src="exemples/video7138.mp4" type="video/mp4"></video>
+            </div>
+
+          </div>
+
+            <h3>Question</h3>
+            <p>What is the gender of the man ?</p>
+
+            <h3>Why is it wrong?</h3>
+            <p>The question can be answered without watching the video with general knowledge.</p>
+
+        </negative-example>
+
+        <negative-example>
+          <div style="display: flex;">
+            <div style='width: 400px;'>
+            <h3>Video</h3>
+            <video width="350" controls="controls" preload="metadata" muted><source  src="exemples/video7138.mp4" type="video/mp4"></video>
+            </div>
+
+          </div>
+
+            <h3>Question</h3>
+            <p>What is the man talking about ?</p>
+
+            <h3>Why is it wrong?</h3>
+            <p>The question is not answarable by watching the visual content of the video; it would require speech or subtitles.</p>
+
+        </negative-example>
+
+        <negative-example>
+          <div style="display: flex;">
+            <div style='width: 400px;'>
+            <h3>Video</h3>
+            <video height="250" width="350" controls="controls" preload="metadata" muted><source  src="exemples/video7138.mp4" type="video/mp4"></video>
+            </div>
+
+          </div>
+
+            <h3>Question</h3>
+            <p>What is in the video ?</p>
+
+            <h3>Why is it wrong?</h3>
+            <p>The question is too generic and not specific to the video.</p>
+
+        </negative-example>
+
+        <negative-example>
+          <div style="display: flex;">
+            <div style='width: 400px;'>
+            <h3>Video</h3>
+            <video height="250" width="350" controls="controls" preload="metadata" muted><source  src="exemples/video9618.mp4" type="video/mp4"></video>
+            </div>
+          </div>
+
+            <h3>Question</h3>
+            <p>What is the woman holding in her hand as she seems reflecting ? </p>
+            <h3>Answer</h3>
+            <p>I think this is a mobile phone</p>
+
+            <h3>Why is it wrong?</h3>
+            <p>The answer should be brief, and should not contain conversational language.</p>
+
+        </negative-example>
+
+    </crowd-instructions>
+
+    <p><span style="color:blue"> <b> Your payments will be processed only if you followed the detailed instructions. Any abuse of the button will result in a rejection. </b></span></p>
+    <p><span style="color:blue"> <b> Bonus </b></span> will be granted to workers that consistently respect the instructions and provide a wide variety of questions and answers. </p>
+
+    <p>
+    <h2>Video 1</h2>
+    <div id="video-container1">
+    </div>
+    </p>
+
+    <h3>Question 1</h3>
+    <crowd-text-area id="Question1" name="Question1" placeholder="Propose a question on Video 1" required></crowd-text-area>
+    <h3>Answer 1</h3>
+    <crowd-text-area id="Answer1" name="Answer1" placeholder="Propose an answer to this question" required></crowd-text-area>
+    <br>
+    <crowd-checkbox id="joker1" name="joker1">Check if Video 1 contains no object, no living being and no place to ask question on.</crowd-checkbox>
+
+    <br>
+    <br>
+
+    <p>
+    <h2>Video 2</h2>
+    <div id="video-container2">
+    </div>
+    </p>
+
+    <h3>Question 2</h3>
+    <crowd-text-area id="Question2" name="Question2" placeholder="Propose a question on Video 2" required></crowd-text-area>
+    <h3>Answer 2</h3>
+    <crowd-text-area id="Answer2" name="Answer2" placeholder="Propose an answer to this question" required></crowd-text-area>
+    <br>
+    <crowd-checkbox id="joker2" name="joker2">Check if Video 2 contains no object, no living being and no place to ask question on.</crowd-checkbox>
+
+    <br>
+    <br>
+
+    <p>
+    <h2>Video 3</h2>
+    <div id="video-container3">
+    </div>
+    </p>
+
+    <h3>Question 3</h3>
+    <crowd-text-area id="Question3" name="Question3" placeholder="Propose a question on Video 3" required></crowd-text-area>
+    <h3>Answer 3</h3>
+    <crowd-text-area id="Answer3" name="Answer3" placeholder="Propose an answer to this question" required></crowd-text-area>
+    <br>
+    <crowd-checkbox id="joker3" name="joker3">Check if Video 3 contains no object, no living being and no place to ask question on.</crowd-checkbox>
+
+    <br>
+    <br>
+
+</crowd-form>
+
+<script>
+    var urls = [`${url0}`, `${url1}`, `${url2}`];
+    // var urls = ["exemples/video9618.mp4","exemples/video7404.mp4","exemples/video8535.mp4"];
+    //var urls = ["https://www.youtube.com/embed/6RLLOEzdxsM?mute=1&start=5&end=15&rel=0","https://www.youtube.com/embed/Ao3XJ-UDdzI?mute=1","https://www.youtube.com/embed/8JnfIa84TnU?mute=1"];
+    const colors = ["white", "red", "blue", "yellow", "pink", "purple", "brown", "grey", "black"];
+
+    function countWords(str) {
+         str = str.replace(/(^\s*)|(\s*$)/gi,""); // remove start and end spaces
+         str = str.replace(/[ ]{2,}/gi," "); // reduce multiple spaces
+         return str.split(' ').length;
+      }
+
+    function askNumber(str){
+        return (str.toLowerCase().indexOf("how many") !== -1) || (str.toLowerCase().indexOf("how much") !== -1)
+    }
+
+    function askyesno(str){
+        return (str.toLowerCase().indexOf('yes') !== -1) || (str.toLowerCase().indexOf('no') !== -1)
+    }
+
+    function askcolor(str){
+        return (colors.indexOf(str.toLowerCase()) >= 0)
+    }
+
+    function validateForm() {
+        const question1 = $('#Question1').val();
+        const answer1 = $('#Answer1').val();
+        const question2 = $('#Question2').val();
+        const answer2 = $('#Answer2').val();
+        const question3 = $('#Question3').val();
+        const answer3 = $('#Answer3').val();
+        const minqlength = Math.min(countWords(question1), countWords(question2), countWords(question3));
+        const maxalength = Math.max(countWords(answer1), countWords(answer2), countWords(answer3));
+        if (minqlength < 4){
+            alert(`At least one question is too short`)
+            return false;
+        }
+        else if (maxalength > 4){
+            alert(`At least one answer is too long`)
+            return false;
+        }
+        else if (askNumber(question1) || askNumber(question2) || askNumber(question3)){
+            alert(`At least one your questions is about a number, which is forbidden`)
+            return false;
+        }
+        else if (askyesno(answer1) || askyesno(answer2) || askyesno(answer3)){
+            alert(`At least one your answers is yes or no, which is forbidden`)
+            return false;
+        }
+        else if (askcolor(answer1) || askcolor(answer2) || askcolor(answer3)){
+            alert(`At least one your answers is a color, which is forbidden`)
+            return false;
+        }
+        return true;
+    }
+
+    $("#video-container1").html("<video src='" + urls[0] + "' height='90' controls='controls' preload='metadata' muted type='video/webm' />");
+    $("#video-container2").html("<video src='" + urls[1] + "' height='90' controls='controls' preload='metadata' muted type='video/webm' />");
+    $("#video-container3").html("<video src='" + urls[2] + "' height='90' controls='controls' preload='metadata' muted type='video/webm' />");
+
+    //$("#video-container1").html("<iframe width='640' height='360' src='" + urls[0] + "'></iframe>")
+
+    document.querySelector('crowd-form').onsubmit = function(e ) {
+    if (!validateForm()) {
+        e.preventDefault();
+    }
+}
+    </script>

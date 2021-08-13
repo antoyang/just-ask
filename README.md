@@ -1,13 +1,13 @@
 # Just Ask: Learning to Answer Questions from Millions of Narrated Videos
 
+[Webpage](https://antoyang.github.io/just-ask.html) • [VideoQA Demo](http://videoqa.paris.inria.fr/) • [Paper](https://arxiv.org/abs/2012.00451) 
+
 This repository provides the code for our paper, including:
 - Data downloading instructions, including our released iVQA and HowToVQA69M datasets
 - Data preprocessing and feature extraction scripts, as well as preprocessed data and features
 - VideoQA automatic generation pipeline
 - Training scripts and pretrained checkpoints, both for pretraining and downstream VideoQA datasets
 - Evaluation scripts
-
-More information can be found on the [project webpage](https://antoyang.github.io/just-ask.html).
 
 ## Paths and Requirements
 Fill the empty paths in the file `global_parameters.py`.
@@ -165,6 +165,17 @@ python main_videoqa.py --checkpoint_dir=ft<dataset> --dataset=<dataset> --lr=0.0
 
 **Training from scratch**: VQA-T trained from scratch is simply obtained by running the previous script with no `pretrain_path` set.
 
+## Available checkpoints
+
+| Training data | iVQA | MSRVTT-QA | MSVD-QA | ActivityNet-QA | How2QA| url | size |
+|-----|-----|-----|-----|-----|-----|-----|-----|
+| HowToVQA69M | 12.2 | 2.9 | 7.5 | 12.2 | 51.1 | [Drive](https://drive.google.com/file/d/1CaAuwEWEQlqaAaiZGsYshQhw2fzInb91/view?usp=sharing)    | 600MB      |
+| HowToVQA69M + iVQA | 35.4 | | | | | [Drive](https://drive.google.com/file/d/1uggSzUxoKUCmrPIx-KfQdfeEI3WoPNXs/view?usp=sharing)    | 600MB      |
+| HowToVQA69M + MSRVTT-QA | | 41.5 | | | | [Drive](https://drive.google.com/file/d/1TiwIsWS0nEpWX-CrIAIOUMeHNPHtQi2s/view?usp=sharing)    | 600MB      |
+| HowToVQA69M + MSVD-QA | | | 43.6 | | | [Drive](https://drive.google.com/file/d/1JObd4k-voyiv-t0CwfedwScwBSAt4D-5/view?usp=sharing)    | 600MB      |
+| HowToVQA69M + ActivityNet-QA | | | | 38.9 | | [Drive](https://drive.google.com/file/d/1tAiqvrrglxqAsCLhiBWCWWxm15-MgFGs/view?usp=sharing)    | 600MB      |
+| HowToVQA69M + How2QA| | | | | 84.4 | [Drive](https://drive.google.com/file/d/1AdrSjYe_mkJOUBtasnn4zcIXIQxf_c_L/view?usp=sharing)    | 600MB      |
+
 ## Inference
 
 ### Evaluating on downstream VideoQA datasets
@@ -195,8 +206,17 @@ python demo_videoqa.py --dataset <dataset> --pretrain_path <CKPT_PATH> \
 ```
 Note that we also host an online demo at [this link](http://videoqa.paris.inria.fr/).
 
+## Misc.
+In the folder misc, you can find a notebook with code for the plots and data statistics showed in the paper.
+
+You can also find there the html code used for iVQA data collection on Amazon Mechanical Turk.
+
+Finally, you can find the manually evaluated samples from generated data at [this link](https://drive.google.com/drive/folders/1bJNr4N_D2kG180RnAJrxqFQiZLLDvT2v?usp=sharing).
+
 ## Acknowledgements
-The video feature extraction code is inspired by [this repository](https://github.com/antoine77340/video_feature_extractor). The model implementation of our multi-modal transformer (as well as the masked language modeling setup) is inspired by [Hugging Face](https://huggingface.co/transformers/model_doc/distilbert.html). 
+The video feature extraction code is inspired by [this repository](https://github.com/antoine77340/video_feature_extractor). 
+The model implementation of our multi-modal transformer (as well as the masked language modeling setup) is inspired by [Hugging Face](https://huggingface.co/transformers/model_doc/distilbert.html).
+The comparison with [Heilman et al](https://aclanthology.org/N10-1086.pdf) was done using [the original Java implementation](http://www.cs.cmu.edu/~ark/mheilman/questions/).
 
 ## Citation 
 If you found this work useful, consider citing us:
