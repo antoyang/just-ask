@@ -1,6 +1,12 @@
 # Just Ask: Learning to Answer Questions from Millions of Narrated Videos
 
-[Webpage](https://antoyang.github.io/just-ask.html) • [VideoQA Demo](http://videoqa.paris.inria.fr/) • [Paper](https://arxiv.org/abs/2012.00451) 
+[Webpage](https://antoyang.github.io/just-ask.html) • [Demo](http://videoqa.paris.inria.fr/) • [Paper](https://arxiv.org/abs/2012.00451) 
+
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/just-ask-learning-to-answer-questions-from/zero-shot-learning-on-ivqa)](https://paperswithcode.com/sota/zero-shot-learning-on-ivqa?p=just-ask-learning-to-answer-questions-from)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/just-ask-learning-to-answer-questions-from/video-question-answering-on-ivqa)](https://paperswithcode.com/sota/video-question-answering-on-ivqa?p=just-ask-learning-to-answer-questions-from)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/just-ask-learning-to-answer-questions-from/visual-question-answering-on-msrvtt-qa-1)](https://paperswithcode.com/sota/visual-question-answering-on-msrvtt-qa-1?p=just-ask-learning-to-answer-questions-from)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/just-ask-learning-to-answer-questions-from/visual-question-answering-on-msvd-qa-1)](https://paperswithcode.com/sota/visual-question-answering-on-msvd-qa-1?p=just-ask-learning-to-answer-questions-from)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/just-ask-learning-to-answer-questions-from/video-question-answering-on-activitynet-qa)](https://paperswithcode.com/sota/video-question-answering-on-activitynet-qa?p=just-ask-learning-to-answer-questions-from)
 
 This repository provides the code for our paper, including:
 - Data downloading instructions, including our released iVQA and HowToVQA69M datasets
@@ -219,11 +225,14 @@ The model implementation of our multi-modal transformer (as well as the masked l
 The comparison with [Heilman et al](https://aclanthology.org/N10-1086.pdf) was done using [the original Java implementation](http://www.cs.cmu.edu/~ark/mheilman/questions/).
 
 ## Citation 
-If you found this work useful, consider citing us:
+If you found this work useful, consider giving this repository a star and citing our paper as followed:
 ```
-@article{yang2020just,
-title={Just Ask: Learning to Answer Questions from Millions of Narrated Videos},
-author={Yang, Antoine and Miech, Antoine and Sivic, Josef and Laptev, Ivan and Schmid, Cordelia},
-journal={arXiv preprint arXiv:2012.00451},
-year={2020}}
+@InProceedings{Yang_2021_ICCV,
+    author    = {Yang, Antoine and Miech, Antoine and Sivic, Josef and Laptev, Ivan and Schmid, Cordelia},
+    title     = {Just Ask: Learning To Answer Questions From Millions of Narrated Videos},
+    booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+    month     = {October},
+    year      = {2021},
+    pages     = {1686-1697}
+}
 ```
