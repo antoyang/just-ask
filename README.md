@@ -43,7 +43,8 @@ bash download/download_howtovqa.sh <DEFAULT_DATASET_DIR>
 This requires having about 6Gb free in `DEFAULT_DATASET_DIR`. You will also need to download features for videos from HowTo100M from [the data providers](https://www.di.ens.fr/willow/research/howto100m/) in `HOWTO_FEATURES_PATH`.
 
 ## Long Start
-If you wish to reproduce the data preprocessing, video feature extraction or HowToVQA69M generation procedure.
+<details>
+<summary>Click for details, if you wish to reproduce the data preprocessing, video feature extraction or HowToVQA69M generation procedure.</summary>
 
 ### Download Raw Data
 The following folders should be created in `DEFAULT_DATASET_DIR`, and should also contain a `video` subfolder containing the videos downloaded from each dataset.
@@ -141,6 +142,8 @@ python videoqa_generation/generate_questions.py
 ```
 python videoqa_generation/merge_qas.py
 ```
+    
+</details>
 
 ## Training
 
@@ -217,7 +220,9 @@ In the folder misc, you can find a notebook with code for the plots and data sta
 
 You can also find there the html code used for iVQA data collection on Amazon Mechanical Turk.
 
-Finally, you can find the manually evaluated samples from generated data at [this link](https://drive.google.com/drive/folders/1bJNr4N_D2kG180RnAJrxqFQiZLLDvT2v?usp=sharing).
+Moreover, you can find the manually evaluated samples from generated data at [this link](https://drive.google.com/drive/folders/1bJNr4N_D2kG180RnAJrxqFQiZLLDvT2v?usp=sharing).
+    
+Finally, you can find the html and python code for the [online demo](http://videoqa.paris.inria.fr/).
 
 ## Acknowledgements
 The video feature extraction code is inspired by [this repository](https://github.com/antoine77340/video_feature_extractor). 
