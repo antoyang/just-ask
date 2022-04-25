@@ -24,6 +24,7 @@ def get_args():
             "howto100m",
             "howtovqa",
             "how2qa",
+            "webvidvqa"
         ],
     )
     parser.add_argument(
@@ -153,6 +154,11 @@ def get_args():
         default=12,
         help="gradient clipping",
     )
+    parser.add_argument(
+        "--probe",
+        action="store_true",
+        help="in this case freeze all weights but the heads",
+    )
 
     # Print
     parser.add_argument(
@@ -196,7 +202,7 @@ def get_args():
     load_path = os.path.join(args.dataset_dir, dataset2folder[args.dataset])
     args.load_path = load_path
 
-    if args.dataset not in ["howto100m", "howtovqa"]:  # VideoQA dataset
+    if args.dataset not in ["howto100m", "howtovqa", "webvidvqa"]:  # VideoQA dataset
         args.features_path = os.path.join(load_path, f"s3d.pth")
         args.train_csv_path = os.path.join(load_path, "train.csv")
         args.val_csv_path = os.path.join(load_path, "val.csv")
@@ -205,7 +211,7 @@ def get_args():
     else:  # Pretraining dataset
         args.features_path = os.path.join(
             args.ssd_dir, "s3d_features", "howto100m_s3d_features"
-        )
+        ) if "howto" in args.dataset else os.path.join(args.ssd_dir, "webvid_s3d_features")
         if args.dataset == "howto100m":
             args.caption_path = os.path.join(
                 load_path, "caption_howto100m_sw_nointersec_norepeat.pickle"
@@ -237,5 +243,9 @@ def get_args():
                 args.val_csv_path = os.path.join(
                     load_path, f"val_howtovqa_{args.subset}.csv"
                 )
+        elif args.dataset == "webvidvqa":
+            args.caption_path = os.path.join(load_path, "webvidvqa.pkl")
+            args.train_csv_path = os.path.join(load_path, "train_webvidvqa.csv")
+            args.val_csv_path = os.path.join(load_path, "val_webvidvqa.csv")
 
     return args

@@ -6,6 +6,7 @@ DEFAULT_CKPT_DIR = ""   # where the training checkpoints and logs will be saved
 DEFAULT_MODEL_DIR = ""  # where the pretrained models are
 SSD_DIR = ""  # where the HowTo100M S3D features are
 HOWTO_FEATURES_PATH = os.path.join(SSD_DIR, "s3d_features", "howto100m_s3d_features")
+WEBVID_FEATURES_PATH = os.path.join(SSD_DIR, "webvid_s3d_features")
 
 # Map from dataset name to folder name
 dataset2folder = {
@@ -16,6 +17,7 @@ dataset2folder = {
     "howto100m": "HowTo100M",
     "howtovqa": "HowToVQA69M",
     "how2qa": "How2QA",
+    "webvidvqa": "WebVidVQA"
 }
 
 # Datasets
@@ -40,6 +42,9 @@ HOWTOVQA_PATH = os.path.join(
 HOW2QA_PATH = os.path.join(
     DEFAULT_DATASET_DIR, dataset2folder["how2qa"]
 )  # Path where How2QA is downloaded
+WEBVID_PATH = os.path.join(
+    DEFAULT_DATASET_DIR, dataset2folder["webvidvqa"]
+)  # Path where WebVid is downloaded
 
 # Models
 S3D_PATH = os.path.join(

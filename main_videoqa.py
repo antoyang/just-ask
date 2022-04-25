@@ -55,6 +55,7 @@ model = MMT_VideoQA(
     T=args.max_feats,
     Q=args.qmax_words,
     baseline=args.baseline,
+    probe=args.probe
 )
 model.cuda()
 logging.info("Using {} GPUs".format(torch.cuda.device_count()))

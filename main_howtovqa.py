@@ -12,6 +12,7 @@ from args import get_args
 from model.multimodal_transformer import MMT_VideoQA
 from loss import Contrastive_Loss
 from data.howtovqa_loader import HowToVQA_Dataset, howtovqa_collate_fn
+from data.webvidvqa_loader import WebVidVQA_Dataset
 from train.train_howtovqa import train_howtovqa, eval_howtovqa
 from transformers import DistilBertTokenizer
 
@@ -49,6 +50,9 @@ model = MMT_VideoQA(
     baseline=args.baseline,
 )
 model = nn.DataParallel(model)
+if args.pretrain_path != "":
+    model.load_state_dict(torch.load(args.pretrain_path))
+    logging.info(f"Loaded checkpoint {args.pretrain_path}")
 model.cuda()
 logging.info("Using {} GPUs".format(torch.cuda.device_count()))
 logging.info(
@@ -56,52 +60,100 @@ logging.info(
 )
 
 # Load captions, dataloaders
-with open(args.caption_path, "rb") as caption_file:
-    caption = pickle.load(caption_file)
-logging.info("Pickle loaded")
 bert_tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-uncased")
 
-trainset = HowToVQA_Dataset(
-    csv_path=args.train_csv_path,
-    caption=caption,
-    features_path=args.features_path,
-    qmax_words=args.qmax_words,
-    amax_words=args.amax_words,
-    train=True,
-    n_pair=args.n_pair,
-    bert_tokenizer=bert_tokenizer,
-    max_feats=args.max_feats,
-)
+if args.dataset == "howtovqa":
+    with open(args.caption_path, "rb") as caption_file:
+        caption = pickle.load(caption_file)
+    logging.info("Pickle loaded")
+    trainset = HowToVQA_Dataset(
+        csv_path=args.train_csv_path,
+        caption=caption,
+        features_path=args.features_path,
+        qmax_words=args.qmax_words,
+        amax_words=args.amax_words,
+        train=True,
+        n_pair=args.n_pair,
+        bert_tokenizer=bert_tokenizer,
+        max_feats=args.max_feats,
+    )
 
-train_loader = DataLoader(
-    trainset,
-    batch_size=args.batch_size,
-    num_workers=args.num_thread_reader,
-    shuffle=True,
-    drop_last=True,
-    collate_fn=howtovqa_collate_fn,
-)
+    train_loader = DataLoader(
+        trainset,
+        batch_size=args.batch_size,
+        num_workers=args.num_thread_reader,
+        shuffle=True,
+        drop_last=True,
+        collate_fn=howtovqa_collate_fn,
+    )
 
-valset = HowToVQA_Dataset(
-    csv_path=args.val_csv_path,
-    caption=caption,
-    features_path=args.features_path,
-    qmax_words=args.qmax_words,
-    amax_words=args.amax_words,
-    train=False,
-    n_pair=args.n_pair,
-    bert_tokenizer=bert_tokenizer,
-    max_feats=args.max_feats,
-)
+    valset = HowToVQA_Dataset(
+        csv_path=args.val_csv_path,
+        caption=caption,
+        features_path=args.features_path,
+        qmax_words=args.qmax_words,
+        amax_words=args.amax_words,
+        train=False,
+        n_pair=args.n_pair,
+        bert_tokenizer=bert_tokenizer,
+        max_feats=args.max_feats,
+    )
 
-val_loader = DataLoader(
-    valset,
-    batch_size=args.batch_size_val,
-    num_workers=args.num_thread_reader,
-    shuffle=False,
-    drop_last=False,
-    collate_fn=howtovqa_collate_fn,
-)
+    val_loader = DataLoader(
+        valset,
+        batch_size=args.batch_size_val,
+        num_workers=args.num_thread_reader,
+        shuffle=False,
+        drop_last=False,
+        collate_fn=howtovqa_collate_fn,
+    )
+elif args.dataset == "webvidvqa":
+    with open(args.webvidvqa_caption_path, "rb") as caption_file:
+        caption = pickle.load(caption_file)
+    logging.info("Pickle loaded")
+
+    trainset = WebVidVQA_Dataset(
+        csv_path=args.train_csv_path,
+        caption=caption,
+        features_path=args.features_path,
+        qmax_words=args.qmax_words,
+        amax_words=args.amax_words,
+        train=True,
+        n_pair=1,
+        bert_tokenizer=bert_tokenizer,
+        max_feats=args.max_feats,
+        feature_dim=args.feature_dim,
+    )
+    train_loader = DataLoader(
+        trainset,
+        batch_size=args.batch_size,
+        num_workers=args.num_thread_reader,
+        shuffle=True,
+        drop_last=True,
+        collate_fn=howtovqa_collate_fn,
+    )
+
+    valset = WebVidVQA_Dataset(
+        csv_path=args.val_csv_path,
+        caption=caption,
+        features_path=args.features_path,
+        qmax_words=args.qmax_words,
+        amax_words=args.amax_words,
+        train=False,
+        n_pair=1,
+        bert_tokenizer=bert_tokenizer,
+        max_feats=args.max_feats,
+        feature_dim=args.feature_dim,
+    )
+
+    val_loader = DataLoader(
+        valset,
+        batch_size=args.batch_size_val * args.n_pair,
+        num_workers=args.num_thread_reader,
+        shuffle=False,
+        drop_last=False,
+        collate_fn=howtovqa_collate_fn,
+    )
 
 logging.info("number of train videos: {}".format(len(train_loader.dataset)))
 logging.info("number of val videos: {}".format(len(val_loader.dataset)))

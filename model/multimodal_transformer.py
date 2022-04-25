@@ -324,6 +324,7 @@ class MMT_VideoQA(nn.Module):
         vocab_size=30522,
         baseline="",
         n_negs=1,
+        probe=False
     ):
         """
         :param feature_dim: dimension of the input video features
@@ -338,6 +339,7 @@ class MMT_VideoQA(nn.Module):
         :param vocab_size: size of the vocabulary for the masked language modeling head
         :param baseline: set as "qa" not to use the video
         :param n_negs: number of negatives sampled for cross-modal matching
+        :param probe: whether or not to freeze all parameters but the heads
         """
         super(MMT_VideoQA, self).__init__()
         # video modules
@@ -389,6 +391,15 @@ class MMT_VideoQA(nn.Module):
 
         # answer modules
         self.amodel = AModel(out_dim=d_model, sentence_dim=2048)
+
+        if probe: # freeze all layers but the heads
+            for n, p in self.named_parameters():
+                if "vqproj" not in n and (
+                    ("amodel" not in n) or ("linear_text" not in n)
+                ):
+                    p.requires_grad_(False)
+                else:
+                    print(n)
 
     def _init_weights(self, module):
         """Initialize the weights."""
