@@ -1,6 +1,6 @@
 torch==1.9.0
 transformers==3.2.0
-numpy==1.19.1
+numpy==1.22.0
 punctuator==0.9.6
 tqdm==4.42.1
 ffmpeg_python==0.2.0
