@@ -15,6 +15,8 @@ This repository provides the code for our paper, including:
 - Training scripts and pretrained checkpoints, both for pretraining and downstream VideoQA datasets
 - Evaluation scripts
 
+#### News 26/09/2022: If you find this work interesting, you may check our related NeurIPS 2022 paper: [Zero-Shot Video Question Answering via Frozen Bidirectional Language Models](https://github.com/antoyang/FrozenBiLM).
+
 #### News 25/04/2022: The extended version of Just Ask has been accepted to the TPAMI Special Issue on the Best Papers of ICCV 2021. This repository now includes functionalities related to this extension (WebVidVQA3M + VideoQA feature probing).
 
 ## Paths and Requirements
