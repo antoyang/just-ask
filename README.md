@@ -2,11 +2,9 @@
 
 [Webpage](https://antoyang.github.io/just-ask.html) • [Demo](http://videoqa.paris.inria.fr/) • [Paper](https://arxiv.org/abs/2012.00451) 
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/just-ask-learning-to-answer-questions-from/zero-shot-learning-on-ivqa)](https://paperswithcode.com/sota/zero-shot-learning-on-ivqa?p=just-ask-learning-to-answer-questions-from)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/just-ask-learning-to-answer-questions-from/video-question-answering-on-ivqa)](https://paperswithcode.com/sota/video-question-answering-on-ivqa?p=just-ask-learning-to-answer-questions-from)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/just-ask-learning-to-answer-questions-from/visual-question-answering-on-msrvtt-qa-1)](https://paperswithcode.com/sota/visual-question-answering-on-msrvtt-qa-1?p=just-ask-learning-to-answer-questions-from)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/just-ask-learning-to-answer-questions-from/visual-question-answering-on-msvd-qa-1)](https://paperswithcode.com/sota/visual-question-answering-on-msvd-qa-1?p=just-ask-learning-to-answer-questions-from)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/just-ask-learning-to-answer-questions-from/video-question-answering-on-activitynet-qa)](https://paperswithcode.com/sota/video-question-answering-on-activitynet-qa?p=just-ask-learning-to-answer-questions-from)
+![Teaser](https://antoyang.github.io/img/justask-header.png)
+
+In this work, we automatically generate large-scale video question answering data from narrated videos, leverage contrastive learning to train on large vocabularies on answers, and show the first zero-shot video question answering results, without any manual annotation of visual data.
 
 This repository provides the code for our paper, including:
 - Data downloading instructions, including our released iVQA, HowToVQA69M and WebVidVQA3M datasets
@@ -15,7 +13,7 @@ This repository provides the code for our paper, including:
 - Training scripts and pretrained checkpoints, both for pretraining and downstream VideoQA datasets
 - Evaluation scripts
 
-#### News 26/09/2022: If you find this work interesting, you may check our related NeurIPS 2022 paper: [Zero-Shot Video Question Answering via Frozen Bidirectional Language Models](https://github.com/antoyang/FrozenBiLM).
+#### News 26/09/2022: If you find this work interesting, you may check our related NeurIPS 2022 repository: [Zero-Shot Video Question Answering via Frozen Bidirectional Language Models](https://github.com/antoyang/FrozenBiLM).
 
 #### News 25/04/2022: The extended version of Just Ask has been accepted to the TPAMI Special Issue on the Best Papers of ICCV 2021. This repository now includes functionalities related to this extension (WebVidVQA3M + VideoQA feature probing).
 
