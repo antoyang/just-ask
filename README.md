@@ -35,6 +35,7 @@ bash download/download_checkpoints.sh <DEFAULT_CKPT_DIR>
 bash download/download_downstream.sh <DEFAULT_DATASET_DIR>
 ```
 
+If you have issues with gshell, you can access the preprocessed data [here](https://drive.google.com/drive/folders/1bMfT9WjBiNWgfdVl2dej4mUaXvICGGRH?usp=sharing) and the checkpoints [here](https://drive.google.com/drive/folders/1DumwduSFaHB-JVZGHtkV1-f4VBYHH9xT?usp=sharing).  
 This requires having about 8Gb free in `DEFAULT_CKPT_DIR` and 3.6Gb free in `DEFAULT_DATASET_DIR`.
 
 ### For HowToVQA69M Pretraining
@@ -45,6 +46,7 @@ If you want to reproduce the pretraining, download HowToVQA69M:
 ```
 bash download/download_howtovqa.sh <DEFAULT_DATASET_DIR>
 ```
+If you have issues with gshell, you can access the files [here](https://drive.google.com/drive/folders/1ZlpgjjcBnpTRgjwpW1z6x2PY513yhpWA?usp=sharing).  
 This requires having about 6Gb free in `DEFAULT_DATASET_DIR`. You will also need to download features for videos from HowTo100M from [the data providers](https://www.di.ens.fr/willow/research/howto100m/) in `HOWTO_FEATURES_PATH`.
 </details>
 
@@ -56,6 +58,7 @@ If you want to reproduce the pretraining, download WebVidVQA3M:
 ```
 bash download/download_webvidvqa.sh <DEFAULT_DATASET_DIR>
 ```
+If you have issues with gshell, you can access the files [here](1ZgZGO4oZzFxk8-5WDkP4pqGfBuMome8E).  
 This requires having about 1Gb free in `DEFAULT_DATASET_DIR`. You will also need to download videos from WebVid from [the data providers](https://m-bain.github.io/webvid-dataset/), and extract features following the instructions below in `WEBVID_FEATURES_PATH`.
 </details>
 
