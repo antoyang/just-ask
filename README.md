@@ -58,7 +58,7 @@ If you want to reproduce the pretraining, download WebVidVQA3M:
 ```
 bash download/download_webvidvqa.sh <DEFAULT_DATASET_DIR>
 ```
-If you have issues with gshell, you can access the files [here](1ZgZGO4oZzFxk8-5WDkP4pqGfBuMome8E).  
+If you have issues with gshell, you can access the files [here](https://drive.google.com/drive/folders/1ZgZGO4oZzFxk8-5WDkP4pqGfBuMome8E?usp=sharing).  
 This requires having about 1Gb free in `DEFAULT_DATASET_DIR`. You will also need to download videos from WebVid from [the data providers](https://m-bain.github.io/webvid-dataset/), and extract features following the instructions below in `WEBVID_FEATURES_PATH`.
 </details>
 
