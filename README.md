@@ -337,17 +337,14 @@ The comparison with [Heilman et al](https://aclanthology.org/N10-1086.pdf) was d
 If you found this work useful, consider giving this repository a star and citing our papers as followed:
 ```
 @inproceedings{yang2021justask,
-title={Just ask: Learning to answer questions from millions of narrated videos},
-author={Yang, Antoine and Miech, Antoine and Sivic, Josef and Laptev, Ivan and Schmid, Cordelia},
-booktitle={Proceedings of the IEEE/CVF International Conference on Computer Vision},
-pages={1686--1697},
+title={Just Ask: Learning to Answer Questions from Millions of Narrated Videos},
+author={Antoine Yang and Antoine Miech and Josef Sivic and Ivan Laptev and Cordelia Schmid},
+booktitle={ICCV},
 year={2021}}
     
 @article{yang2022learningta,
 title={Learning to Answer Visual Questions from Web Videos},
 author={Antoine Yang and Antoine Miech and Josef Sivic and Ivan Laptev and Cordelia Schmid},
-journal={IEEE transactions on pattern analysis and machine intelligence},
-year={2022},
-volume={PP}
-}
+journal={IEEE TPAMI},
+year={2022}}
 ```
