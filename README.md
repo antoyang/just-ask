@@ -35,7 +35,8 @@ bash download/download_checkpoints.sh <DEFAULT_CKPT_DIR>
 bash download/download_downstream.sh <DEFAULT_DATASET_DIR>
 ```
 
-If you have issues with gshell, you can access the preprocessed data [here](https://drive.google.com/drive/folders/1bMfT9WjBiNWgfdVl2dej4mUaXvICGGRH?usp=sharing) and the checkpoints [here](https://drive.google.com/drive/folders/1DumwduSFaHB-JVZGHtkV1-f4VBYHH9xT?usp=sharing).  
+If you have issues with gshell, you can access the preprocessed data [here](https://drive.google.com/drive/folders/1bMfT9WjBiNWgfdVl2dej4mUaXvICGGRH?usp=sharing) and the checkpoints [here](https://drive.google.com/drive/folders/1DumwduSFaHB-JVZGHtkV1-f4VBYHH9xT?usp=sharing).
+Another possibility is to use [gdown](https://pypi.org/project/gdown/) instead.
 This requires having about 8Gb free in `DEFAULT_CKPT_DIR` and 3.6Gb free in `DEFAULT_DATASET_DIR`.
 
 ### For HowToVQA69M Pretraining
