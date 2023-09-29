@@ -154,12 +154,12 @@ For HowTo100M, the features should be stored in `HOWTO_FEATURES_PATH`, one file 
     
 This requires downloading the pretrained BRNN model weights from [Punctuator2](https://github.com/ottokart/punctuator2). The `INTERSPEECH-T-BRNN.pcl` file should be in `DEFAULT_MODEL_DIR`. 
 
-**Punctuating**: First, we punctuate the speech data at the video level and split the video into clips temporally aligned with infered sentences (you may launch this script on multiple CPUs to fasten the process):
+**Punctuating**: First, we punctuate the speech data at the video level and split the video into clips temporally aligned with inferred sentences (you may launch this script on multiple CPUs to fasten the process):
 ```
 python videoqa_generation/punctuate.py
 ```
 
-**Merging infered speech sentences**: Second, we merge the punctuated data into one file:
+**Merging inferred speech sentences**: Second, we merge the punctuated data into one file:
 ```
 python videoqa_generation/merge_punctuations.py
 ```
@@ -222,6 +222,7 @@ If you wish to train a VideoQA model on Web videos.
 **Training VQA-T on HowToVQA69M**:
 <details>
 <summary>Click for details... </summary>
+
 To train on HowToVQA69M with contrastive loss and MLM loss (it takes less than 48H on 8 NVIDIA Tesla V100), run:
 ```
 python main_howtovqa.py --dataset="howtovqa" --epochs=10 --checkpoint_dir="pthowtovqa" \
@@ -234,7 +235,8 @@ Also note that DistilBERT tokenizer and model checkpoints will be automatically 
 **Training VQA-T on WebVidVQA3M**:
 <details>
 <summary>Click for details... </summary>
-To train on WebVidVQA3M with contrastive loss and MLM loss (it takes less than 3H on 8 NVIDIA Tesla V100),
+
+To train on WebVidVQA3M with contrastive loss and MLM loss (it takes less than 3H on 8 NVIDIA Tesla V100), run:
 ```
 python main_howtovqa.py --dataset="webvidvqa" --epochs=10 --checkpoint_dir="ptwebvidvqa" \
 --batch_size=4096 --batch_size_val=8192 --freq_display=10
