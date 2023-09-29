@@ -222,8 +222,8 @@ If you wish to train a VideoQA model on Web videos.
 **Training VQA-T on HowToVQA69M**:
 <details>
 <summary>Click for details... </summary>
-To train on HowToVQA69M with contrastive loss and MLM loss (it takes less than 48H on 8 NVIDIA Tesla V100), run:
 
+To train on HowToVQA69M with contrastive loss and MLM loss (it takes less than 48H on 8 NVIDIA Tesla V100), run:
 ```
 python main_howtovqa.py --dataset="howtovqa" --epochs=10 --checkpoint_dir="pthowtovqa" \
 --batch_size=128 --batch_size_val=256 --n_pair=32 --freq_display=10
@@ -235,8 +235,8 @@ Also note that DistilBERT tokenizer and model checkpoints will be automatically 
 **Training VQA-T on WebVidVQA3M**:
 <details>
 <summary>Click for details... </summary>
-To train on WebVidVQA3M with contrastive loss and MLM loss (it takes less than 3H on 8 NVIDIA Tesla V100), run:
 
+To train on WebVidVQA3M with contrastive loss and MLM loss (it takes less than 3H on 8 NVIDIA Tesla V100), run:
 ```
 python main_howtovqa.py --dataset="webvidvqa" --epochs=10 --checkpoint_dir="ptwebvidvqa" \
 --batch_size=4096 --batch_size_val=8192 --freq_display=10
